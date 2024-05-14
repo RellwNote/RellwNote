@@ -14,7 +14,7 @@ var (
 	Error   *log.Logger // Record Error
 )
 
-func Init() {
+func init() {
 	file, err := os.OpenFile("error.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 
 	if err != nil {
@@ -26,4 +26,12 @@ func Init() {
 	Warning = log.New(os.Stdout, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
 	Error = log.New(io.MultiWriter(file, os.Stderr), "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 
+}
+
+func Infoln(info string) {
+	Info.Println(info)
+}
+
+func Infof(format string, args ...any) {
+	Info.Printf(format, args...)
 }

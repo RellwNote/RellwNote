@@ -1,10 +1,7 @@
 package main
 
-import (
-	"github.com/RellwNote/RellwNote/log"
-)
+import "github.com/RellwNote/RellwNote/log"
 
 func main() {
-	log.Init()
-	log.Info.Println("Hello,RellwNote")
+	log.Infof("abc %d %d", 1, 2)
 }
