@@ -1,7 +1,15 @@
 package main
 
-import "github.com/RellwNote/RellwNote/log"
+import (
+	"github.com/RellwNote/RellwNote/directoryGenerator"
+	"github.com/RellwNote/RellwNote/log"
+)
+
+const filePath = "C:\\Users\\jianing.zhang\\Desktop\\study\\RellwNotes\\mds\\SUMMARY.md"
 
 func main() {
-	log.Infof("abc %d %d", 1, 2)
+	content := directoryGenerator.GetSummaryFileToByte(filePath)
+	directory := directoryGenerator.ParseSummaryByte(content)
+
+	log.Infof("%v", directory)
 }
