@@ -27,3 +27,11 @@ func init() {
 	Error = log.New(io.MultiWriter(file, os.Stderr), "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 
 }
+
+func Infoln(info string) {
+	Info.Println(info)
+}
+
+func Infof(format string, args ...any) {
+	Info.Printf(format, args...)
+}
