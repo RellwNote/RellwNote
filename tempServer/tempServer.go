@@ -1,19 +1,21 @@
 package tempServer
 
 import (
+	"bytes"
+	"fmt"
 	"html/template"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
-var Templates = make(map[string]*template.Template)
+var rootTemplate = template.New("main")
 
 func init() {
 	loadAllTemplate("template")
 }
 
-// 加载一个目录下的全部模版，模版在 root 文件夹中的相对路径作为 key 存在 Templates 变量中。
 func loadAllTemplate(root string) {
 	_ = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -24,16 +26,29 @@ func loadAllTemplate(root string) {
 		}
 		read, _ := os.ReadFile(path)
 		key := path[len(root)+1:]
-		Templates[key] = template.Must(template.New(path).Parse(string(read)))
+		key = strings.ReplaceAll(key, "\\", "/")
+		rootTemplate.Parse(fmt.Sprintf(`{{define "%s"}}%s{{end}}`, key, read))
 		return nil
 	})
 }
 
 func Start() {
+
 	http.HandleFunc("/templates", func(w http.ResponseWriter, r *http.Request) {
-		for s := range Templates {
-			w.Write([]byte(s + "\n"))
+
+		for _, v := range rootTemplate.Templates() {
+			w.Write([]byte(v.Name() + "\n"))
 		}
 	})
+	http.HandleFunc("/content", func(writer http.ResponseWriter, request *http.Request) {
+		var buf bytes.Buffer
+		err := rootTemplate.ExecuteTemplate(&buf, "html/content.gohtml", nil)
+		if err != nil {
+			println(err.Error())
+			return
+		}
+		writer.Write(buf.Bytes())
+	})
+
 	_ = http.ListenAndServe(":8080", nil)
 }

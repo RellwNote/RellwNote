@@ -1,0 +1,54 @@
+<style>
+    .site-toc {
+        margin: 0;
+        padding: 1em;
+        background: #eee;
+        color: rgb(31, 31, 31);
+    }
+
+    .site-toc li {
+        font-weight: normal;
+        list-style: none;
+        cursor: default;
+    }
+
+    .site-toc > li {
+        font-weight: bold;
+        border-bottom: #36b6d3 0.2em solid;
+        padding: 1em;
+    }
+
+    .site-toc > li > p {
+        padding: 0.5em;
+    }
+
+    .site-toc > li > ul > li > p {
+        margin: 0;
+        padding: 0.3em;
+    }
+
+    .site-toc > li > ul > li > ul {
+        border-left: 0.15em dotted rgb(89, 208, 236);
+    }
+
+    .site-toc > li > ul > li > ul > li > p {
+        margin: 0;
+        padding: 0.1em 0.3em;
+    }
+
+    .site-toc p {
+        transition: background-color 0.1s;
+        margin: 0;
+        border-radius: 0.15em;
+    }
+
+    .site-toc p:hover {
+        background: #59D0EC66;
+        transition: background-color 0s;
+    }
+
+    .site-toc ul {
+        margin-left: 0.6em;
+        padding-left: 0.4em;
+    }
+</style>
