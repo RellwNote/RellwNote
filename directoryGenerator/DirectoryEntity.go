@@ -6,11 +6,7 @@ type Directory struct {
 }
 
 type DirectoryItem struct {
-	title          string
-	isLink         bool
-	prefix         string
-	kind           string
-	markdownFile   string
-	setting        map[string]string
-	directoryItems []DirectoryItem
+	Title          string
+	MarkdownFile   string
+	DirectoryItems []DirectoryItem
 }

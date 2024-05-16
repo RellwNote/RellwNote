@@ -5,7 +5,7 @@ import (
 	"github.com/RellwNote/RellwNote/log"
 )
 
-const filePath = "C:\\Users\\jianing.zhang\\Desktop\\study\\RellwNotes\\mds\\SUMMARY.md"
+const filePath = "./test/SummaryTest.md"
 
 func main() {
 	content := directoryGenerator.GetSummaryFileToByte(filePath)
