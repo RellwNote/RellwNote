@@ -3,6 +3,7 @@ package tempServer
 import (
 	"bytes"
 	"fmt"
+	"github.com/RellwNote/RellwNote/config"
 	"html/template"
 	"net/http"
 	"os"
@@ -33,8 +34,10 @@ func loadAllTemplate(root string) {
 }
 
 func Start() {
+	templateFile := config.GetPublicConfig.Template.FilePath
+	templateServerPort := config.GetPublicConfig.Template.Server.Port
 
-	http.HandleFunc("/templates", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(templateFile, func(w http.ResponseWriter, r *http.Request) {
 
 		for _, v := range rootTemplate.Templates() {
 			w.Write([]byte(v.Name() + "\n"))
@@ -50,5 +53,5 @@ func Start() {
 		writer.Write(buf.Bytes())
 	})
 
-	_ = http.ListenAndServe(":8080", nil)
+	_ = http.ListenAndServe(templateServerPort, nil)
 }

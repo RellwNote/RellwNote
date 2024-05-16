@@ -9,21 +9,16 @@ import (
 
 var mdParser parser.Parser
 
-// init
-// @Description        初始化md parse工具
-// @Create             waterIB 2024-05-15 16:24
+// init 初始化md parse工具
 func init() {
 	mdParser = goldmark.DefaultParser()
 }
 
-// ParseSummaryByte
-// @Description        传入md数据，转成目录结构
-// @Create             waterIB 2024-05-15 16:24
-// @Param              content []byte md字节数据
-// @Return             Directory 目录结构
+// ParseSummaryByte 传入md数据，转成目录结构
 func ParseSummaryByte(content []byte) (directory Directory) {
 	reader := text.NewReader(content)
 	document := mdParser.Parse(reader)
+
 	var rootDirectoryItem DirectoryItem
 	parseList(document, content, &rootDirectoryItem)
 	directory.DirectoryItems = rootDirectoryItem.DirectoryItems
@@ -38,13 +33,18 @@ func parseList(node ast.Node, content []byte, rootDirectoryItem *DirectoryItem) 
 		case *ast.List:
 			parseList(item, content, rootDirectoryItem)
 		case *ast.ListItem:
-			link := getLink(item)
 			listItemDirectoryItem := &DirectoryItem{
 				Title:          getTitle(item, content),
-				MarkdownFile:   link,
+				MarkdownFile:   getLink(item),
 				DirectoryItems: make([]DirectoryItem, 0),
 			}
 			parseList(item, content, listItemDirectoryItem)
+			rootDirectoryItem.DirectoryItems = append(rootDirectoryItem.DirectoryItems, *listItemDirectoryItem)
+		case *ast.ThematicBreak:
+			listItemDirectoryItem := &DirectoryItem{
+				Title:          "---",
+				DirectoryItems: make([]DirectoryItem, 0),
+			}
 			rootDirectoryItem.DirectoryItems = append(rootDirectoryItem.DirectoryItems, *listItemDirectoryItem)
 		}
 	}
@@ -73,5 +73,5 @@ func getLink(node ast.Node) (link string) {
 			return getLink(c)
 		}
 	}
-	return string("")
+	return ""
 }
