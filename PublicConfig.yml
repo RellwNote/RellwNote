@@ -1,0 +1,7 @@
+template:
+  server:
+    port: ':8080'
+  filepath: /templates
+
+directory:
+  filepath: ./test/SummaryTest.md
