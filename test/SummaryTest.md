@@ -14,7 +14,10 @@
   - [5. 进阶实战1: 实现一个 web 服务器](xxxx/xxxx/xxx.md)
   - [6. 进阶实战2: 实现一个简单 Redis](xxxx/xxxx/xxx.md)
   - [7. Rust 难点攻关](xxxx/xxxx/xxx.md)
+    - [12](3)
+    - [13](3)
+    - [14](3)
 - 附录
-  - 16. Appendix
+  - 16\. Appendix
     - [16.1. 关键字](xxxx/xxxx/xxx.md)
     - [16.2. 运算符与符号](xxxx/xxxx/xxx.md)

@@ -1,6 +1,8 @@
 package directoryGenerator
 
 import (
+	"bytes"
+	"fmt"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/parser"
@@ -74,4 +76,35 @@ func getLink(node ast.Node) (link string) {
 		}
 	}
 	return ""
+}
+
+// ParseDirectoryToByte 将目录结构转化成[]byte存入文件
+func ParseDirectoryToByte(directory Directory) []byte {
+	content := bytes.NewBuffer([]byte{})
+	directoryItems := directory.DirectoryItems
+	for _, directoryItem := range directoryItems {
+		content.Write(parseDirectoryItem(directoryItem, 0))
+	}
+	return content.Bytes()
+}
+
+// parseDirectoryItem 转化DirectoryItem成[]byte
+func parseDirectoryItem(directoryItem DirectoryItem, layer int) []byte {
+	directoryItemByte := bytes.NewBuffer([]byte{})
+	for i := 0; i < layer; i++ {
+		directoryItemByte.WriteString("\t")
+	}
+	if len(directoryItem.MarkdownFile) == 0 {
+		directoryItemByte.WriteString(fmt.Sprintf("- %s\n", directoryItem.Title))
+	} else {
+		directoryItemByte.WriteString(fmt.Sprintf("- [%s](%s)\n", directoryItem.Title, directoryItem.MarkdownFile))
+	}
+	if len(directoryItem.DirectoryItems) == 0 {
+		return directoryItemByte.Bytes()
+	}
+	for _, v := range directoryItem.DirectoryItems {
+		childBytes := parseDirectoryItem(v, layer+1)
+		directoryItemByte.Write(childBytes)
+	}
+	return directoryItemByte.Bytes()
 }
