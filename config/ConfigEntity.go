@@ -3,6 +3,11 @@ package config
 type PublicConfig struct {
 	Template  Template  `yaml:"template"`
 	Directory Directory `yaml:"directory"`
+	Temp      Temp      `yaml:"temp"`
+}
+
+type Temp struct {
+	Server Server `yaml:"server"`
 }
 
 type Server struct {
@@ -10,7 +15,6 @@ type Server struct {
 }
 
 type Template struct {
-	Server   Server `yaml:"server"`
 	FilePath string `yaml:"filepath"`
 }
 

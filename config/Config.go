@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-const publicConfigFilePath = "./publicconfig.yml"
+const publicConfigFilePath = "./config.yml"
 
 var GetPublicConfig PublicConfig
 
