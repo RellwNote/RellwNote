@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/RellwNote/RellwNote/config"
+	"github.com/RellwNote/RellwNote/directoryGenerator"
 	"github.com/RellwNote/RellwNote/log"
 	"html/template"
 	"net/http"
@@ -12,13 +13,14 @@ import (
 	"strings"
 )
 
-var rootTemplate = template.New("main")
+var rootTemplate *template.Template
 
 func init() {
 	loadAllTemplate("template")
 }
 
 func loadAllTemplate(root string) {
+	rootTemplate = template.New("main")
 	_ = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -45,8 +47,18 @@ func printTemplates() (res []byte) {
 }
 
 func printContent() (res []byte, err error) {
+	filePath := config.GetPublicConfig.Directory.FilePath
+	content := directoryGenerator.GetSummaryFileToByte(filePath)
+	directory := directoryGenerator.ParseSummaryByte(content)
+
+	contentTemplateData := struct {
+		Directory directoryGenerator.Directory
+	}{
+		Directory: directory,
+	}
+
 	var buf bytes.Buffer
-	err = rootTemplate.ExecuteTemplate(&buf, "html/content.gohtml", nil)
+	err = rootTemplate.ExecuteTemplate(&buf, "html/content.gohtml", contentTemplateData)
 	if err != nil {
 		return nil, err
 	}
@@ -54,6 +66,8 @@ func printContent() (res []byte, err error) {
 }
 
 func httpHandler(w http.ResponseWriter, r *http.Request) {
+	loadAllTemplate("template")
+
 	var response []byte
 	var err error
 	switch r.URL.Path {
