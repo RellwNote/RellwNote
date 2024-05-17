@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/RellwNote/RellwNote/config"
+	"github.com/RellwNote/RellwNote/log"
 	"html/template"
 	"net/http"
 	"os"
@@ -28,30 +29,58 @@ func loadAllTemplate(root string) {
 		read, _ := os.ReadFile(path)
 		key := path[len(root)+1:]
 		key = strings.ReplaceAll(key, "\\", "/")
-		rootTemplate.Parse(fmt.Sprintf(`{{define "%s"}}%s{{end}}`, key, read))
+		_, err = rootTemplate.Parse(fmt.Sprintf(`{{define "%s"}}%s{{end}}`, key, read))
+		if err != nil {
+			log.Error.Println(err.Error())
+		}
 		return nil
 	})
 }
 
+func printTemplates() (res []byte) {
+	for _, t := range rootTemplate.Templates() {
+		res = append(res, []byte(t.Name()+"\n")...)
+	}
+	return res
+}
+
+func printContent() (res []byte, err error) {
+	var buf bytes.Buffer
+	err = rootTemplate.ExecuteTemplate(&buf, "html/content.gohtml", nil)
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+func httpHandler(w http.ResponseWriter, r *http.Request) {
+	var response []byte
+	var err error
+	switch r.URL.Path {
+	case "/templates":
+		response = printTemplates()
+		break
+	case "/content":
+		response, err = printContent()
+	}
+
+	// write error
+	if err != nil {
+		log.Error.Println(err.Error())
+		_, _ = w.Write([]byte(err.Error()))
+		return
+	}
+	// write response
+	_, err = w.Write(response)
+	if err != nil {
+		log.Error.Println(err.Error())
+		return
+	}
+}
+
 func Start() {
-	templateFile := config.GetPublicConfig.Template.FilePath
-	templateServerPort := config.GetPublicConfig.Template.Server.Port
-
-	http.HandleFunc(templateFile, func(w http.ResponseWriter, r *http.Request) {
-
-		for _, v := range rootTemplate.Templates() {
-			w.Write([]byte(v.Name() + "\n"))
-		}
-	})
-	http.HandleFunc("/content", func(writer http.ResponseWriter, request *http.Request) {
-		var buf bytes.Buffer
-		err := rootTemplate.ExecuteTemplate(&buf, "html/content.gohtml", nil)
-		if err != nil {
-			println(err.Error())
-			return
-		}
-		writer.Write(buf.Bytes())
-	})
-
-	_ = http.ListenAndServe(templateServerPort, nil)
+	err := http.ListenAndServe(config.GetPublicConfig.Template.Server.Port, http.HandlerFunc(httpHandler))
+	if err != nil {
+		log.Error.Println(err.Error())
+	}
 }
