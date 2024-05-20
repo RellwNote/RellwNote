@@ -2,51 +2,21 @@ package tempServer
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/RellwNote/RellwNote/config"
 	"github.com/RellwNote/RellwNote/directoryGenerator"
 	"github.com/RellwNote/RellwNote/log"
-	"html/template"
+	"github.com/RellwNote/RellwNote/template"
 	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
 )
 
-var rootTemplate *template.Template
-
-func init() {
-	loadAllTemplate("template")
-}
-
-func loadAllTemplate(root string) {
-	rootTemplate = template.New("main")
-	_ = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-		if info.IsDir() {
-			return nil
-		}
-		read, _ := os.ReadFile(path)
-		key := path[len(root)+1:]
-		key = strings.ReplaceAll(key, "\\", "/")
-		_, err = rootTemplate.Parse(fmt.Sprintf(`{{define "%s"}}%s{{end}}`, key, read))
-		if err != nil {
-			log.Error.Println(err.Error())
-		}
-		return nil
-	})
-}
-
-func printTemplates() (res []byte) {
-	for _, t := range rootTemplate.Templates() {
+func templatesPage() (res []byte) {
+	for _, t := range template.LoadFromDir(config.GetPublicConfig.Template.FilePath).Templates() {
 		res = append(res, []byte(t.Name()+"\n")...)
 	}
 	return res
 }
 
-func printContent() (res []byte, err error) {
+func contentPage() (res []byte, err error) {
 	filePath := config.GetPublicConfig.Directory.FilePath
 	content := directoryGenerator.GetSummaryFileToByte(filePath)
 	directory := directoryGenerator.ParseSummaryByte(content)
@@ -58,7 +28,7 @@ func printContent() (res []byte, err error) {
 	}
 
 	var buf bytes.Buffer
-	err = rootTemplate.ExecuteTemplate(&buf, "html/content.gohtml", contentTemplateData)
+	err = template.LoadFromDir(config.GetPublicConfig.Template.FilePath).ExecuteTemplate(&buf, "html/content.gohtml", contentTemplateData)
 	if err != nil {
 		return nil, err
 	}
@@ -66,16 +36,14 @@ func printContent() (res []byte, err error) {
 }
 
 func httpHandler(w http.ResponseWriter, r *http.Request) {
-	loadAllTemplate("template")
-
 	var response []byte
 	var err error
 	switch r.URL.Path {
 	case "/templates":
-		response = printTemplates()
+		response = templatesPage()
 		break
 	case "/content":
-		response, err = printContent()
+		response, err = contentPage()
 	}
 
 	// write error
@@ -93,7 +61,7 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func Start() {
-	err := http.ListenAndServe(config.GetPublicConfig.Template.Server.Port, http.HandlerFunc(httpHandler))
+	err := http.ListenAndServe(config.GetPublicConfig.Temp.Server.Port, http.HandlerFunc(httpHandler))
 	if err != nil {
 		log.Error.Println(err.Error())
 	}
