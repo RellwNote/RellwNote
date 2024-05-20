@@ -1,19 +1,21 @@
 package main
 
 import (
-	"fmt"
-	"github.com/RellwNote/RellwNote/directoryGenerator"
-	"github.com/RellwNote/RellwNote/log"
-	"github.com/RellwNote/RellwNote/tempServer"
+	"github.com/RellwNote/RellwNote/TOCGenerator"
+	"github.com/RellwNote/RellwNote/config"
 )
 
 func main() {
-	filePath := "test/SummaryTest.md"
+	filePath := config.Config.LibraryPath
 
-	content := directoryGenerator.GetSummaryFileToByte(filePath)
-	directory := directoryGenerator.ParseSummaryByte(content)
-	content = directoryGenerator.ParseDirectoryToByte(directory)
-	fmt.Println(string(content))
-	log.Infof("%v", directory)
-	tempServer.Start()
+	//content := directoryGenerator.GetSummaryFileToByte(filePath, config.SummaryFileName)
+	//directory := directoryGenerator.ParseSummaryByte(content)
+	//content = directoryGenerator.ParseDirectoryToByte(directory)
+	//fmt.Println(string(content))
+	//log.Infof("%v", directory)
+	toc := TOCGenerator.CreateSummaryFileByFilePath(filePath)
+	content := TOCGenerator.ParseDirectoryToByte(toc)
+	TOCGenerator.WriteContentToFile("./test.md", content)
+
+	//tempServer.Start()
 }

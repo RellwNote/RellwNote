@@ -8,6 +8,7 @@ import (
 
 const ConfigFilePath = "./config.yaml"
 const TemplateDir = "./templates"
+const SummaryFileName = "SummaryTest.md"
 
 var Config Model
 
