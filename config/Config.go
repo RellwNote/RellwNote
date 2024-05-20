@@ -6,19 +6,29 @@ import (
 	"os"
 )
 
-const publicConfigFilePath = "./config.yml"
+const ConfigFilePath = "./config.yaml"
+const TemplateDir = "./templates"
 
-var GetPublicConfig PublicConfig
+var Config Model
 
 func init() {
-	configBytes, err := os.ReadFile(publicConfigFilePath)
+	LoadConfig()
+}
+
+func LoadConfig() {
+	configBytes, err := os.ReadFile(ConfigFilePath)
 	if err != nil {
-		log.Error.Println("读取配置文件:", publicConfigFilePath, "失败！", err)
+		log.Error.Println("读取配置文件:", ConfigFilePath, "失败！", err)
 		return
 	}
-	err = yaml.Unmarshal(configBytes, &GetPublicConfig)
+	err = yaml.Unmarshal(configBytes, &Config)
 	if err != nil {
 		log.Error.Println("解析配置文件失败:", err)
 		return
 	}
+}
+
+type Model struct {
+	PreviewServer string `yaml:"Preview server"`
+	LibraryPath   string `yaml:"Library path"`
 }

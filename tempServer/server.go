@@ -10,15 +10,14 @@ import (
 )
 
 func templatesPage() (res []byte) {
-	for _, t := range template.LoadFromDir(config.GetPublicConfig.Template.FilePath).Templates() {
+	for _, t := range template.LoadFromDir(config.TemplateDir).Templates() {
 		res = append(res, []byte(t.Name()+"\n")...)
 	}
 	return res
 }
 
 func contentPage() (res []byte, err error) {
-	filePath := config.GetPublicConfig.Directory.FilePath
-	content := directoryGenerator.GetSummaryFileToByte(filePath)
+	content := directoryGenerator.GetSummaryFileToByte("test/SummaryTest.md")
 	directory := directoryGenerator.ParseSummaryByte(content)
 
 	contentTemplateData := struct {
@@ -28,7 +27,7 @@ func contentPage() (res []byte, err error) {
 	}
 
 	var buf bytes.Buffer
-	err = template.LoadFromDir(config.GetPublicConfig.Template.FilePath).ExecuteTemplate(&buf, "html/content.gohtml", contentTemplateData)
+	err = template.LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "html/content.gohtml", contentTemplateData)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +60,7 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func Start() {
-	err := http.ListenAndServe(config.GetPublicConfig.Temp.Server.Port, http.HandlerFunc(httpHandler))
+	err := http.ListenAndServe(config.Config.PreviewServer, http.HandlerFunc(httpHandler))
 	if err != nil {
 		log.Error.Println(err.Error())
 	}
