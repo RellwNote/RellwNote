@@ -19,6 +19,9 @@ func LoadFromDir(root string) *template.Template {
 		if info.IsDir() {
 			return nil
 		}
+		if strings.ToLower(filepath.Ext(filePath)) != ".gohtml" {
+			return nil
+		}
 		read, _ := os.ReadFile(filePath)
 		key := filepath.ToSlash(filePath)
 		key = key[strings.Index(key, "/")+1:]

@@ -2,8 +2,11 @@ package template
 
 import (
 	"errors"
+	"github.com/RellwNote/RellwNote/config"
 	"html/template"
 	"math/rand"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 )
@@ -12,6 +15,7 @@ var CustomFuncMap = template.FuncMap{
 	"Dict":         Dict,
 	"Iif":          Iif,
 	"RandomString": RandomString,
+	"JS":           JS,
 	"Add": func(a, b int) int {
 		return a + b
 	},
@@ -50,6 +54,14 @@ func RandomString(length int) []string {
 		b[i] = charset[seededRand.Intn(len(charset))]
 	}
 	return strings.Split(string(b), "\n")
+}
+
+func JS(path string) interface{} {
+	res, err := os.ReadFile(filepath.Join(config.TemplateDir, path))
+	if err != nil {
+		return err.Error()
+	}
+	return template.JS(res)
 }
 
 func interfaceToBool(i interface{}) bool {

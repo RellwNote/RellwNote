@@ -1,6 +1,21 @@
-<article>
+<article id="markdown-content">
     <h2>随机文本测试用例</h2>
     {{ range RandomString 3000 }}
         <p>{{.}}</p>
     {{end}}
 </article>
+
+<script>
+    let html = converter.makeHtml(`
+# Title
+
+- List
+- Item
+
+> Abc def
+
+jio **wdwa** d wad
+`)
+    console.log(html)
+    document.getElementById("markdown-content").innerHTML = html
+</script>
