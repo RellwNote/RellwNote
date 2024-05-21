@@ -2,9 +2,10 @@ package tempServer
 
 import (
 	"bytes"
+	"github.com/RellwNote/RellwNote/TOCGenerator"
 	"github.com/RellwNote/RellwNote/config"
-	"github.com/RellwNote/RellwNote/directoryGenerator"
 	"github.com/RellwNote/RellwNote/log"
+	"github.com/RellwNote/RellwNote/models"
 	"github.com/RellwNote/RellwNote/template"
 	"net/http"
 )
@@ -17,11 +18,12 @@ func templatesPage() (res []byte) {
 }
 
 func contentPage() (res []byte, err error) {
-	content := directoryGenerator.GetSummaryFileToByte("test/SummaryTest.md")
-	directory := directoryGenerator.ParseSummaryByte(content)
+
+	content := TOCGenerator.GetSummaryFileToByte("test/", "Summary.md")
+	directory := TOCGenerator.ParseSummaryByte(content)
 
 	contentTemplateData := struct {
-		Directory directoryGenerator.Directory
+		Directory models.TOCItem
 	}{
 		Directory: directory,
 	}
@@ -60,7 +62,7 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func Start() {
-	err := http.ListenAndServe(config.Config.PreviewServer, http.HandlerFunc(httpHandler))
+	err := http.ListenAndServe(config.PreviewServer, http.HandlerFunc(httpHandler))
 	if err != nil {
 		log.Error.Println(err.Error())
 	}

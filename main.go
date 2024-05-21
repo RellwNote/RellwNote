@@ -4,6 +4,7 @@ import (
 	"github.com/RellwNote/RellwNote/TOCGenerator"
 	"github.com/RellwNote/RellwNote/config"
 	"github.com/RellwNote/RellwNote/log"
+	"github.com/RellwNote/RellwNote/tempServer"
 )
 
 func main() {
@@ -13,5 +14,5 @@ func main() {
 	content := TOCGenerator.GetSummaryFileToByte(filePath, summaryName)
 	TOCItems := TOCGenerator.ParseSummaryByte(content)
 	log.Info.Println(TOCItems)
-	//tempServer.Start()
+	tempServer.Start()
 }
