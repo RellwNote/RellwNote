@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	filePath := config.Config.LibraryPath
+	filePath := config.LibraryPath
 
 	//content := directoryGenerator.GetSummaryFileToByte(filePath, config.SummaryFileName)
 	//directory := directoryGenerator.ParseSummaryByte(content)
