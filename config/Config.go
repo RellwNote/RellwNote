@@ -1,7 +1,7 @@
 package config
 
 const TemplateDir = "./templates"
-const SummaryFileName = "SummaryTest.md"
+const SummaryFileName = "SUMMARY.md"
 
 const LibraryPath = "./test"
 const PreviewServer = ":8080"
