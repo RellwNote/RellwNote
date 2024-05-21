@@ -1,0 +1,22 @@
+{{if eq .Item.Title "---"}}
+    <hr>
+{{else}}
+    <li class="toc-item deep-{{.Deep}} {{ with .Item.DirectoryItems}}has-child{{else}}only-title{{end}}">
+        {{ $ChildDeep := Add .Deep 1 }}
+        {{ if .Item.MarkdownFile}}
+            <a href="{{.Item.MarkdownFile}}">{{.Item.Title}}</a>
+        {{ else }}
+            <p>{{.Item.Title}}</p>
+        {{ end }}
+
+        {{if .Item.DirectoryItems}}
+            <ul>
+                {{range .Item.DirectoryItems}}
+                    {{if le $ChildDeep 3}}
+                        {{template "toc/item.gohtml" Dict "Deep" $ChildDeep "Item" .}}
+                    {{end}}
+                {{end}}
+            </ul>
+        {{end}}
+    </li>
+{{end}}

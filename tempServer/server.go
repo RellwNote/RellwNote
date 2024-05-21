@@ -27,7 +27,7 @@ func contentPage() (res []byte, err error) {
 	}
 
 	var buf bytes.Buffer
-	err = template.LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "html/content.gohtml", contentTemplateData)
+	err = template.LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "content.gohtml", contentTemplateData)
 	if err != nil {
 		return nil, err
 	}

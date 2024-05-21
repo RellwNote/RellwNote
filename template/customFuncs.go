@@ -8,6 +8,9 @@ import (
 var CustomFuncMap = template.FuncMap{
 	"Dict": Dict,
 	"Iif":  Iif,
+	"Add": func(a, b int) int {
+		return a + b
+	},
 }
 
 func Dict(args ...interface{}) (map[string]interface{}, error) {
