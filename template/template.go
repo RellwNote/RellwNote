@@ -20,7 +20,7 @@ func LoadFromDir(root string) *template.Template {
 			return nil
 		}
 		read, _ := os.ReadFile(filePath)
-		key := strings.ReplaceAll(filePath, "\\", "/")
+		key := filepath.ToSlash(filePath)
 		key = key[strings.Index(key, "/")+1:]
 		_, err = temp.Parse(fmt.Sprintf(`{{define "%s"}}%s{{end}}`, key, read))
 		if err != nil {

@@ -3,11 +3,15 @@ package template
 import (
 	"errors"
 	"html/template"
+	"math/rand"
+	"strings"
+	"time"
 )
 
 var CustomFuncMap = template.FuncMap{
-	"Dict": Dict,
-	"Iif":  Iif,
+	"Dict":         Dict,
+	"Iif":          Iif,
+	"RandomString": RandomString,
 	"Add": func(a, b int) int {
 		return a + b
 	},
@@ -36,6 +40,16 @@ func Iif(args ...interface{}) interface{} {
 		return args[2]
 	}
 	return ""
+}
+
+func RandomString(length int) []string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789                                \n"
+	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return strings.Split(string(b), "\n")
 }
 
 func interfaceToBool(i interface{}) bool {
