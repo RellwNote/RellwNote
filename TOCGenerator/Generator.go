@@ -125,7 +125,7 @@ func CreateSummaryFileByFilePath(filepath string) (TOC models.TOCItem) {
 		log.Error.Println("选中的路径：", filepath, "不是目录.", err)
 	}
 
-	TOCItem := walkDirToCreateTOCItem("./test/mds")
+	TOCItem := walkDirToCreateTOCItem(filepath)
 	return TOCItem
 }
 
