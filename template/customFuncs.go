@@ -1,6 +1,7 @@
 package template
 
 import (
+	"bytes"
 	"errors"
 	"github.com/RellwNote/RellwNote/config"
 	"html/template"
@@ -12,10 +13,11 @@ import (
 )
 
 var CustomFuncMap = template.FuncMap{
-	"Dict":         Dict,
-	"Iif":          Iif,
-	"RandomString": RandomString,
-	"JS":           JS,
+	"Dict":            Dict,
+	"Iif":             Iif,
+	"RandomString":    RandomString,
+	"JS":              JS,
+	"DynamicTemplate": DynamicTemplate,
 	"Add": func(a, b int) int {
 		return a + b
 	},
@@ -62,6 +64,16 @@ func JS(path string) interface{} {
 		return err.Error()
 	}
 	return template.JS(res)
+}
+
+func DynamicTemplate(path string, args interface{}) interface{} {
+	var buf bytes.Buffer
+
+	err := LastLoadedTemplate.ExecuteTemplate(&buf, path, args)
+	if err != nil {
+		return err.Error()
+	}
+	return template.HTML(buf.String())
 }
 
 func interfaceToBool(i interface{}) bool {

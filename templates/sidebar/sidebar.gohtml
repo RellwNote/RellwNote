@@ -1,0 +1,85 @@
+<div class="sidebar">
+    {{DynamicTemplate .Content .Data}}
+    <div class="resizer">
+        <div></div>
+    </div>
+</div>
+
+<script>
+    // 最小侧边栏宽度
+    const minWidth = 160
+    // 隐藏侧边栏宽度，当强行把侧边栏弄得小于这个宽度，会直接隐藏侧边栏
+    const hideWidth = 20
+
+    let resizing = false
+    let resizingStartX = 0
+    let resizer = document.querySelector(".sidebar .resizer")
+
+    resizer.addEventListener("mousedown", (e) => {
+        resizing = true
+        resizingStartX = e.clientX
+        document.documentElement.classList.add("cannot-select")
+    })
+
+    document.addEventListener('mousemove', (e) => {
+        if (resizing === false)
+            return
+
+        let size = e.clientX
+        if (size < hideWidth)
+            size = 0
+        else if (size < minWidth)
+            size = minWidth
+
+        document.documentElement.style.setProperty("--sidebar-width", size + "px")
+    })
+
+    document.addEventListener("mouseup", (e) => {
+        resizing = false
+        document.documentElement.classList.remove("cannot-select")
+    })
+</script>
+
+<style>
+    :root {
+        --sidebar-width: 300px;
+        --sidebar-resizer-width: 0.6em;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: var(--sidebar-width);
+        overflow-y: auto;
+    }
+
+    .sidebar .resizer {
+        position: fixed;
+        top: 0;
+        left: var(--sidebar-width);
+        width: var(--sidebar-resizer-width);
+        height: 100%;
+        cursor: ew-resize;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .sidebar .resizer:hover div {
+        height: 100%;
+    }
+
+    .sidebar .resizer div {
+        background: rgba(0, 0, 0, 0.22);
+        height: 3em;
+        width: 50%;
+        transition: height 0.2s;
+    }
+
+    /* 用于在拖拽调整侧边栏大小时给整篇文档加上，以防止拖拽侧边栏时选中文本 */
+    .cannot-select {
+        user-select: none;
+    }
+</style>
