@@ -84,7 +84,7 @@ func getLink(node ast.Node) (link string) {
 	return ""
 }
 
-// ParseDirectoryToByte 将目录结构转化成[]byte存入文件
+// ParseDirectoryToByte 将目录结构转化成[]byte
 func ParseDirectoryToByte(TOC models.TOCItem) []byte {
 	content := bytes.NewBuffer([]byte{})
 	directoryItems := TOC.TOCItems
@@ -94,7 +94,6 @@ func ParseDirectoryToByte(TOC models.TOCItem) []byte {
 	return content.Bytes()
 }
 
-// parseDirectoryItem 转化DirectoryItem成[]byte
 func parseDirectoryItem(TOCItem models.TOCItem, layer int) []byte {
 	directoryItemByte := bytes.NewBuffer([]byte{})
 	for i := 0; i < layer; i++ {
