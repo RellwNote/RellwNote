@@ -1,0 +1,2 @@
+templates/js/** linguist-vendored
+*.gohtml        linguist-language=HTML
