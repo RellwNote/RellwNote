@@ -4,37 +4,17 @@
     <meta charset="UTF-8">
     <title>Content</title>
     <style>
-        :root {
-            --sidebar-left-width: 300px;
-        }
-
-        .sidebar-left {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            right: calc(100vw - var(--sidebar-left-width));
-            overflow-y: auto;
-        }
-
         .page-center {
-            margin-left: var(--sidebar-left-width);
+            margin-left: calc(var(--sidebar-width) + var(--sidebar-resizer-width));
         }
     </style>
-    {{template "toc/style.gohtml"}}
-    {{template "article/scripts.gohtml"}}
-    {{template "article/style.gohtml"}}
-    {{template "navbar/style.gohtml"}}
-    {{template "footer/style.gohtml"}}
 </head>
 <body>
-<div class="sidebar-left">
-    {{template "toc/toc.gohtml" .Directory}}
-</div>
+{{template "sidebar/sidebar.gohtml" Dict "Content" "toc/toc.gohtml" "Data" .Directory}}
 <div class="page-center">
     {{ template "navbar/navbar.gohtml" }}
     {{ template "article/article.gohtml" }}
-    {{template "footer/footer.gohtml"}}
+    {{ template "footer/footer.gohtml" }}
 </div>
 
 </body>
