@@ -12,15 +12,14 @@ import (
 	"path/filepath"
 )
 
-func templatesPage() (res []byte) {
+func templatesPage() (res []byte, state int) {
 	for _, t := range template.LoadFromDir(config.TemplateDir).Templates() {
 		res = append(res, []byte(t.Name()+"\n")...)
 	}
-	return res
+	return res, 200
 }
 
-func contentPage() (res []byte, err error) {
-
+func contentPage() (res []byte, state int) {
 	content := TOCGenerator.GetSummaryFileToByte("test/", "Summary.md")
 	directory := TOCGenerator.ParseSummaryByte(content)
 
@@ -31,82 +30,51 @@ func contentPage() (res []byte, err error) {
 	}
 
 	var buf bytes.Buffer
-	err = template.LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "content.gohtml", contentTemplateData)
+	err := template.LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "content.gohtml", contentTemplateData)
 	if err != nil {
-		return nil, err
+		return []byte(err.Error()), 500
 	}
-	return buf.Bytes(), nil
+	return buf.Bytes(), 200
 }
 
-func serveStaticFiles(w http.ResponseWriter, r *http.Request) {
-	filePath := filepath.Join(config.LibraryPath, r.URL.Path)
-
+func staticFile(path string) (res []byte, state int) {
+	filePath := filepath.Join(config.LibraryPath, path)
 	file, err := os.Stat(filePath)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Error.Println(err)
-		return
+		return nil, 404
 	}
 	if file.IsDir() {
-		log.Error.Println("访问的文件是一个文件夹，非md文件", filePath)
-		_, err := w.Write([]byte("404 访问的文件是一个文件夹，非md文件"))
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		return
+		log.Error.Println("尝试访问静态文件", filePath, "，但这是一个目录")
+		return nil, 404
 	}
 
 	fileByte, err := os.ReadFile(filePath)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Error.Println(err)
-		return
+		log.Error.Println("尝试访问静态文件", filePath, "出现错误：", err.Error())
+		return nil, 500
 	}
-	_, err = w.Write(fileByte)
-	if err != nil {
-		log.Error.Println(err)
-	}
+
+	return fileByte, 200
 }
 
 func httpHandler(w http.ResponseWriter, r *http.Request) {
 	var response []byte
-	var err error
-
+	var state int
 	urlPath := r.URL.Path
 	if urlPath == "/templates" {
-		response = templatesPage()
-		_, err := w.Write(response)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Error.Println(err)
-			return
-		}
-		return
+		response, state = templatesPage()
+	} else if urlPath == "/content" {
+		response, state = contentPage()
+	} else {
+		response, state = staticFile(urlPath)
 	}
 
-	if urlPath == "/content" {
-		response, err = contentPage()
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Error.Println(err)
-			return
-		}
-		_, err := w.Write(response)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Error.Println(err)
-			return
-		}
+	w.WriteHeader(state)
+	_, err := w.Write(response)
+	if err != nil {
+		log.Error.Println(err.Error())
 		return
 	}
-
-	if len(urlPath) > 3 && urlPath[len(urlPath)-3:len(urlPath)] == ".md" {
-		serveStaticFiles(w, r)
-		return
-	}
-	w.WriteHeader(http.StatusNotFound)
-	return
 }
 
 func Start() {
