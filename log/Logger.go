@@ -8,10 +8,10 @@ import (
 )
 
 var (
-	Trace   *log.Logger // Record Trace
-	Info    *log.Logger // Record Info
-	Warning *log.Logger // Record Warning
-	Error   *log.Logger // Record Error
+	Trace   *log.Logger
+	Info    *log.Logger
+	Warning *log.Logger
+	Error   *log.Logger
 )
 
 func init() {
@@ -25,13 +25,4 @@ func init() {
 	Info = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	Warning = log.New(os.Stdout, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
 	Error = log.New(io.MultiWriter(file, os.Stderr), "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
-
-}
-
-func Infoln(info string) {
-	Info.Println(info)
-}
-
-func Infof(format string, args ...any) {
-	Info.Printf(format, args...)
 }
