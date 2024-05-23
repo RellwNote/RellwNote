@@ -20,7 +20,7 @@ func templatesPage() (res []byte, state int) {
 }
 
 func contentPage() (res []byte, state int) {
-	content := TOCGenerator.GetSummaryFileToByte("test/", "Summary.md")
+	content := TOCGenerator.GetSummaryFileToByte(config.LibraryPath, config.SummaryFileName)
 	directory := TOCGenerator.ParseSummaryByte(content)
 
 	contentTemplateData := struct {
