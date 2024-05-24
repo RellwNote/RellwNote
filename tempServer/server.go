@@ -7,6 +7,7 @@ import (
 	"github.com/RellwNote/RellwNote/log"
 	"github.com/RellwNote/RellwNote/models"
 	"github.com/RellwNote/RellwNote/template"
+	"math/rand/v2"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -60,7 +61,7 @@ func staticFile(path string) (res []byte, state int) {
 
 func httpHandler(w http.ResponseWriter, r *http.Request) {
 	if config.DebugDelay > 0 {
-		time.Sleep(config.DebugDelay)
+		time.Sleep(time.Duration(rand.Int64N(int64(config.DebugDelay))))
 	}
 	var response []byte
 	var state int
