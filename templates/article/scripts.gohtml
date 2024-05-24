@@ -1,3 +1,19 @@
 <script>
     {{JS "js/showdown.js"}}
+    {{JS "js/mdtools.js"}}
+</script>
+
+<script>
+    window.addEventListener("popstate",e => {
+        ShowCurrentPageMarkdown()
+    })
+
+    function ShowCurrentPageMarkdown(){
+        LoadMarkdownSource(GetCurrentPageMarkdownURL()).then(source => {
+            const convert = new showdown.Converter()
+            document.querySelector("#markdown-content").innerHTML = convert.makeHtml(source)
+        }).catch(console.log)
+    }
+
+    ShowCurrentPageMarkdown()
 </script>
