@@ -12,10 +12,7 @@
 <body>
 {{template "sidebar/sidebar.gohtml" Dict "Content" "toc/toc.gohtml" "Data" .Directory}}
 <div class="page-center">
-    {{ template "navbar/navbar.gohtml" }}
     {{ template "article/article.gohtml" }}
-    {{ template "footer/footer.gohtml" }}
 </div>
-
 </body>
 </html>

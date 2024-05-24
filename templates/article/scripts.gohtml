@@ -4,16 +4,28 @@
 </script>
 
 <script>
-    window.addEventListener("popstate",e => {
-        ShowCurrentPageMarkdown()
-    })
-
-    function ShowCurrentPageMarkdown(){
-        LoadMarkdownSource(GetCurrentPageMarkdownURL()).then(source => {
+    function ReloadCurrentMarkdownByURL(){
+        const articleTag = document.querySelector("article#markdown-content")
+        const contentTag = document.querySelector("article#markdown-content .markdown")
+        const url = GetCurrentPageMarkdownURL()
+        articleTag.classList.add('loading')
+        articleTag.classList.remove('notfound')
+        LoadMarkdownSource(url).then(source => {
+            // 防止多次点击目录导致多次请求顺序错乱
+            if (url !== GetCurrentPageMarkdownURL())
+                return
             const convert = new showdown.Converter()
-            document.querySelector("#markdown-content").innerHTML = convert.makeHtml(source)
-        }).catch(console.log)
+            contentTag.innerHTML = convert.makeHtml(source)
+        }).catch(() => {
+            articleTag.classList.add('notfound')
+        }).finally(() => {
+            articleTag.classList.remove('loading')
+        })
     }
 
-    ShowCurrentPageMarkdown()
+    window.addEventListener("popstate",e => {
+        ReloadCurrentMarkdownByURL()
+    })
+
+    ReloadCurrentMarkdownByURL()
 </script>

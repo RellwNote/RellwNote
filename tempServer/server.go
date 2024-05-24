@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 func templatesPage() (res []byte, state int) {
@@ -58,6 +59,9 @@ func staticFile(path string) (res []byte, state int) {
 }
 
 func httpHandler(w http.ResponseWriter, r *http.Request) {
+	if config.DebugDelay > 0 {
+		time.Sleep(config.DebugDelay)
+	}
 	var response []byte
 	var state int
 	urlPath := r.URL.Path
