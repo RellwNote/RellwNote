@@ -18,6 +18,7 @@ var CustomFuncMap = template.FuncMap{
 	"RandomString":    RandomString,
 	"JS":              JS,
 	"CSS":             CSS,
+	"URL":             URL,
 	"DynamicTemplate": DynamicTemplate,
 	"Add": func(a, b int) int {
 		return a + b
@@ -73,6 +74,10 @@ func CSS(path string) interface{} {
 		return err.Error()
 	}
 	return template.CSS(res)
+}
+
+func URL(url string) interface{} {
+	return template.URL(url)
 }
 
 func DynamicTemplate(path string, args interface{}) interface{} {

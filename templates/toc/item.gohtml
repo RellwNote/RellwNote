@@ -4,7 +4,7 @@
     <li class="toc-item deep-{{.Deep}} {{ with .Item.TOCItems}}has-child{{else}}only-title{{end}}">
         {{ $ChildDeep := Add .Deep 1 }}
         {{ if .Item.MarkdownFile}}
-            <a href="#{{.Item.MarkdownFile}}">{{.Item.Title}}</a>
+            <a href="#{{URL .Item.MarkdownFile}}">{{.Item.Title}}</a>
         {{ else }}
             <p>{{.Item.Title}}</p>
         {{ end }}

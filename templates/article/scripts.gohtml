@@ -4,18 +4,36 @@
 </script>
 
 <script>
+    /**
+     * 将 Markdown 显示到页面上
+     * @param source {string} Markdown 源码
+     */
+    function ShowMarkdown(source) {
+        const contentTag = document.querySelector("article#markdown-content .markdown")
+        const convert = new showdown.Converter()
+        contentTag.innerHTML = convert.makeHtml(source)
+        for(let a of contentTag.querySelectorAll("a")) {
+            a.href = LinkHrefFilter(a.getAttribute('href'))
+        }
+        for(let image of contentTag.querySelectorAll("img")) {
+            image.src = ImageSrcFilter(image.getAttribute('src'))
+        }
+    }
+
+    /**
+     * 根据URL重新加载页面内容
+     */
     function ReloadCurrentMarkdownByURL(){
         const articleTag = document.querySelector("article#markdown-content")
-        const contentTag = document.querySelector("article#markdown-content .markdown")
         const url = GetCurrentPageMarkdownURL()
         articleTag.classList.add('loading')
         articleTag.classList.remove('notfound')
+
         LoadMarkdownSource(url).then(source => {
             // 防止多次点击目录导致多次请求顺序错乱
             if (url !== GetCurrentPageMarkdownURL())
                 return
-            const convert = new showdown.Converter()
-            contentTag.innerHTML = convert.makeHtml(source)
+            ShowMarkdown(source)
         }).catch(() => {
             articleTag.classList.add('notfound')
         }).finally(() => {
