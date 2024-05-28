@@ -17,7 +17,7 @@ html {
 .markdown {
     font-size: var(--font-size);
     padding-bottom: 30vh;
-    margin: 2em auto;
+    margin: 0em auto;
     max-width: 700pt;
 }
 
@@ -25,6 +25,7 @@ html {
     text-align: center;
     border-bottom: var(--main-color) 0.1em solid;
     padding: 1.6em 1em;
+    margin: 0;
 }
 
 .markdown h2 {

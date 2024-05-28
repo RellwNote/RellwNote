@@ -1,15 +1,20 @@
 <style>
-    article#markdown-content .markdown{
+    article#markdown-content {
+        margin: 0 1em;
+    }
+
+    article#markdown-content .markdown {
         transition: opacity 0.5s;
     }
+
     article#markdown-content.loading .markdown {
-        opacity: 0.5;
+        opacity: 0.3;
     }
 
     article#markdown-content .cover {
         position: fixed;
         top: 0;
-        left: calc(var(--sidebar-width) + var(--sidebar-resizer-width));
+        left: var(--sidebar-width);
         right: 0;
         bottom: 0;
 
@@ -20,26 +25,30 @@
         backdrop-filter: blur(1px);
         user-select: none;
     }
+
     article#markdown-content.notfound .cover,
     article#markdown-content.loading .cover {
         display: flex;
     }
-    article#markdown-content .cover > *{
+
+    article#markdown-content .cover > * {
         display: none;
     }
 
-    article#markdown-content.notfound .cover .notfound{
+    article#markdown-content.notfound .cover .notfound {
         display: unset;
     }
-    article#markdown-content.loading .cover .loading{
+
+    article#markdown-content.loading .cover .loading {
         display: unset;
         animation: LoadingTextAnima 0.6s alternate infinite;
     }
+
     @keyframes LoadingTextAnima {
         from {
             opacity: 0.5;
         }
-        to{
+        to {
             opacity: 1;
         }
     }

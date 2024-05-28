@@ -1,0 +1,65 @@
+<style>
+    :root {
+        --sidebar-width: 300px;
+        --sidebar-resizer-width: 0.6em;
+        --sidebar-controller-width: 0.6em;
+    }
+
+    .sidebar {
+        width: var(--sidebar-width);
+        min-width: var(--sidebar-width);
+
+        position: fixed;
+        top: 0;
+        bottom: 0;
+
+        display: flex;
+        flex-direction: row;
+    }
+
+    .sidebar .sidebar-content {
+        margin-right: var(--sidebar-resizer-width);
+        overflow-y: auto;
+        height: 100%;
+        flex: 1;
+    }
+
+    .sidebar .resizer {
+        position: fixed;
+        top: 0;
+        left: calc(var(--sidebar-width) - var(--sidebar-resizer-width));
+        width: var(--sidebar-resizer-width);
+        height: 100%;
+        cursor: ew-resize;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .sidebar .resizer:hover div {
+        height: 100%;
+    }
+
+    .sidebar .resizer div {
+        background: rgba(0, 0, 0, 0.22);
+        height: 3em;
+        width: 50%;
+        transition: height 0.2s;
+    }
+
+    .sidebar .sidebar-content {
+        margin-left: var(--sidebar-controller-width);
+        margin-right: var(--sidebar-resizer-width);
+    }
+
+    .sidebar .sidebar-controller{
+        /*position: fixed;*/
+        height: 100%;
+        width: var(--sidebar-controller-width);
+    }
+
+    /* 用于在拖拽调整侧边栏大小时给整篇文档加上，以防止拖拽侧边栏时选中文本 */
+    .cannot-select {
+        user-select: none;
+    }
+</style>
