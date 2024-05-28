@@ -1,5 +1,6 @@
 - [GDScript 零基础图文入门](./GDScript.md)
 - [关于本文](./ABOUT.md)
+- [表格测试](TableTest.md)
 - [开始](./Part1/Start.md)
     - [什么是编程](Part1/什么是编程.md)
     - [第一句代码](Part1/第一句代码.md)

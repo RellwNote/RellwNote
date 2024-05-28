@@ -23,13 +23,15 @@ html {
 .markdown h1 {
     text-align: center;
     border-bottom: var(--main-color) 0.1em solid;
-    padding: 1.6em 1em ;
+    padding: 1.6em 1em;
 }
+
 .markdown h2 {
     margin-top: 2.6em;
     margin-bottom: 1em;
 }
-.markdown h2::after{
+
+.markdown h2::after {
     margin-top: 0.2em;
     width: 3em;
     height: 0.1em;
@@ -63,4 +65,26 @@ html {
     margin: 0.5em;
     padding: 0.5em 1em;
     border-left: solid 0.3em #3d3d3d;
+}
+
+/*超链接*/
+.markdown a {
+    color: var(--main-color);
+    border-bottom: 0.1em var(--main-color) solid;
+    text-decoration: none;
+}
+
+.markdown a:hover {
+    border-color: var(--hover-color);
+}
+
+.markdown a:visited {
+    color: #368cd3;
+}
+
+/*图片*/
+.markdown img{
+    max-width: calc(100vw - var(--sidebar-resizer-width) - var(--sidebar-width) - 3em);
+    margin: auto;
+    display: block;
 }
