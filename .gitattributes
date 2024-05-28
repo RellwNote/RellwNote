@@ -1,2 +1,3 @@
 templates/js/showdown.js linguist-vendored
+templates/js/marked.min.js linguist-vendored
 *.gohtml                 linguist-language=HTML

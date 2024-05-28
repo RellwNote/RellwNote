@@ -1,5 +1,6 @@
 :root {
     --main-color: #36b6d3;
+    --minor-color: #5cabbb;
     --hover-color: #36b6d366;
     --text-color: #1f1f1f;
     --background: #ffffff;
@@ -87,4 +88,25 @@ html {
     max-width: calc(100vw - var(--sidebar-resizer-width) - var(--sidebar-width) - 3em);
     margin: auto;
     display: block;
+}
+
+/*表格*/
+.markdown table{
+    border-collapse: collapse;
+}
+.markdown table tbody tr:hover{
+    background: #e0e0e0;
+}
+.markdown table th,
+.markdown table td {
+    border-top: #b7b7b7 solid .1em;
+    border-bottom: #b7b7b7 solid .1em;
+}
+.markdown table th{
+    padding: 0.3em 1em;
+    font-size: 0.9em;
+    color: #737373;
+}
+.markdown table td {
+    padding: 0.6em;
 }

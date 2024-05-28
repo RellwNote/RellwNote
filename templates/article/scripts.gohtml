@@ -1,5 +1,5 @@
 <script>
-    {{JS "js/showdown.js"}}
+    {{JS "js/marked.min.js"}}
     {{JS "js/mdtools.js"}}
 </script>
 
@@ -10,8 +10,7 @@
      */
     function ShowMarkdown(source) {
         const contentTag = document.querySelector("article#markdown-content .markdown")
-        const convert = new showdown.Converter()
-        contentTag.innerHTML = convert.makeHtml(source)
+        contentTag.innerHTML = marked.parse(source)
         for(let a of contentTag.querySelectorAll("a")) {
             a.href = LinkHrefFilter(a.getAttribute('href'))
         }
