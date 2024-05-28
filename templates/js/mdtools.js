@@ -45,7 +45,7 @@ function LinkHrefFilter(href) {
  * 获取当前浏览的 MD 的所在目录
  * @returns {string}
  */
-function GetCurrentPageMarkdownURLBase(){
+function GetCurrentPageMarkdownURLBase() {
     const currentPath = decodeURIComponent(GetCurrentPageMarkdownURL())
     const lastLimiterIndex = currentPath.lastIndexOf("/")
     if (lastLimiterIndex >= 0)
@@ -85,3 +85,50 @@ async function LoadMarkdownSource(path) {
  * @property {number} state
  * @property {string} message
  */
+
+/**
+ * 解析 MD 文档的前缀配置项目
+ * @param matter {string}
+ * @return {Map<string,any>}
+ */
+function ParseFrontMatter(matter) {
+    let res = new Map()
+
+    matter.split("\n")
+        .map(e => e.trim())
+        .filter(e => e.indexOf(":") >= 0)
+        .map(e => {
+            let limiterIndex = e.indexOf(":")
+            let prefix = e.slice(0, limiterIndex).trim()
+            let value = e.slice(limiterIndex + 1).trim()
+            if (value.startsWith('"') && value.endsWith('"') || value.startsWith("'") && value.endsWith("'")) {
+                value = value.slice(1, value.length - 1)
+            }
+            return [prefix, value]
+        })
+        .forEach(e => res.set(e[0], e[1]))
+
+    return res;
+}
+
+/**
+ * 解析 MD 文档的前缀配置项目，并返回去除掉配置项目后的 MD 源码
+ * @param source {string}
+ * @return {[Map<string,any>,string]}
+ */
+function ParseFrontMatterFromSource(source) {
+    let resMap = new Map()
+    if (source.trimStart().startsWith("---")) {
+        let readyParseFrontMatter = source.trimStart().slice(3)
+        let endIndex = readyParseFrontMatter.indexOf("---")
+        if (endIndex >= 0) {
+            let matter = readyParseFrontMatter.slice(0, endIndex).trim()
+            resMap = ParseFrontMatter(matter)
+
+            // 去除前缀配置，防止被显示到文档中
+            source = source.trimStart().slice(3)
+            source = source.slice(source.indexOf("---") + 3).trimStart()
+        }
+    }
+    return [resMap, source]
+}

@@ -9,12 +9,17 @@
      * @param source {string} Markdown 源码
      */
     function ShowMarkdown(source) {
+        let parseResult = ParseFrontMatterFromSource(source)
+        window.frontMatter = parseResult[0]
+        source = parseResult[1]
+
         const contentTag = document.querySelector("article#markdown-content .markdown")
         contentTag.innerHTML = marked.parse(source)
-        for(let a of contentTag.querySelectorAll("a")) {
+
+        for (let a of contentTag.querySelectorAll("a")) {
             a.href = LinkHrefFilter(a.getAttribute('href'))
         }
-        for(let image of contentTag.querySelectorAll("img")) {
+        for (let image of contentTag.querySelectorAll("img")) {
             image.src = ImageSrcFilter(image.getAttribute('src'))
         }
     }
@@ -22,7 +27,7 @@
     /**
      * 根据URL重新加载页面内容
      */
-    function ReloadCurrentMarkdownByURL(){
+    function ReloadCurrentMarkdownByURL() {
         const articleTag = document.querySelector("article#markdown-content")
         const url = GetCurrentPageMarkdownURL()
         articleTag.classList.add('loading')
@@ -40,7 +45,7 @@
         })
     }
 
-    window.addEventListener("popstate",e => {
+    window.addEventListener("popstate", e => {
         ReloadCurrentMarkdownByURL()
     })
 
