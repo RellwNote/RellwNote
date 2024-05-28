@@ -1,9 +1,13 @@
 package config
 
-const TemplateDir = "./templates"
-const SummaryFileName = "SUMMARY.md"
+var (
+	LibraryPath = "library"
+	ServerPort  = 8333
+	ServerHost  = "localhost"
+)
 
-const LibraryPath = "./test/MyGDScriptBook"
-const PreviewServer = ":8080"
-
-const DebugDelay = 0
+const (
+	TemplateDir     = "templates"
+	SummaryFileName = "SUMMARY.md"
+	DebugDelay      = 0
+)

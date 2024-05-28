@@ -2,6 +2,7 @@ package tempServer
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/RellwNote/RellwNote/TOCGenerator"
 	"github.com/RellwNote/RellwNote/config"
 	"github.com/RellwNote/RellwNote/log"
@@ -83,7 +84,9 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func Start() {
-	err := http.ListenAndServe(config.PreviewServer, http.HandlerFunc(httpHandler))
+	server := fmt.Sprintf("%s:%d", config.ServerHost, config.ServerPort)
+	fmt.Printf("Server setup on http://%s\n", server)
+	err := http.ListenAndServe(server, http.HandlerFunc(httpHandler))
 	if err != nil {
 		log.Error.Println(err.Error())
 	}
