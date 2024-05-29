@@ -58,7 +58,6 @@ func parseList(node ast.Node, content []byte, rootDirectoryItem *models.TOCItem)
 	}
 }
 
-// getTitle 获取一个节点的标题
 func getTitle(node ast.Node, content []byte) string {
 	for child := node.FirstChild(); child != nil; child = child.NextSibling() {
 		switch c := child.(type) {
@@ -71,7 +70,6 @@ func getTitle(node ast.Node, content []byte) string {
 	return ""
 }
 
-// getLink 获取一个节点的引用文件
 func getLink(node ast.Node) (link string) {
 	for child := node.FirstChild(); child != nil; child = child.NextSibling() {
 		switch c := child.(type) {
