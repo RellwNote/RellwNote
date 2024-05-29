@@ -41,6 +41,23 @@ func contentPage() (res []byte, state int) {
 	return buf.Bytes(), 200
 }
 
+func indexPage() ([]byte, int) {
+	if config.LibraryFileExists("index.html") {
+		res, err := config.ReadLibraryFile("index.html")
+		if err != nil {
+			return []byte("load library index.html error"), 500
+		}
+		return res, 200
+	}
+
+	var buf bytes.Buffer
+	err := template.LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "index/index.gohtml", nil)
+	if err != nil {
+		return []byte(err.Error()), 500
+	}
+	return buf.Bytes(), 200
+}
+
 func staticFile(path string) (res []byte, state int) {
 	filePath := filepath.Join(config.LibraryPath, path)
 	file, err := os.Stat(filePath)
@@ -73,6 +90,8 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 		response, state = templatesPage()
 	} else if urlPath == "/content" {
 		response, state = contentPage()
+	} else if urlPath == "/" || urlPath == "/index.html" {
+		response, state = indexPage()
 	} else {
 		response, state = staticFile(urlPath)
 	}

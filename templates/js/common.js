@@ -125,7 +125,7 @@ function ParseFrontMatter(matter) {
 /**
  * 解析 MD 文档的前缀配置项目，并返回去除掉配置项目后的 MD 源码
  * @param source {string}
- * @return {[Map<string,any>,string]}
+ * @return {[Map<string,string>,string]}
  */
 function ParseFrontMatterFromSource(source) {
     let resMap = new Map()
@@ -152,7 +152,7 @@ function ParseFrontMatterFromSource(source) {
 function LinkClick(tag, event) {
     event.preventDefault()
     const href = decodeURIComponent(tag.getAttribute("href"))
-    console.log(CheckLinkType(href) + "   " + href)
+
     switch (CheckLinkType(href)) {
         case "external":
             window.open(href)
@@ -170,4 +170,87 @@ function LinkClick(tag, event) {
  */
 window.note = {
     onMarkdownLinkChange: new Event("onMarkdownLinkChange"),
+}
+
+/**
+ * 符合 RellwNote 的 Markdonw 到 HTML 的转换器
+ */
+class RellwNoteMarkdownConvert {
+    /**
+     * 创建转换器
+     */
+    constructor() {
+        /**
+         * 后处理器列表，Key 是标签的 CSS 选择器，Value 是后处理器
+         * @type {Map<string, function(HTMLElement):void>}
+         */
+        this.postProcessor = new Map()
+        this.postProcessor.set("a", this.PostProcess_Anchor)
+        this.postProcessor.set("img", this.PostProcess_Img)
+        this.postProcessor.set("h1,h2,h3,h4,h5,h6", this.PostProcess_Title)
+    }
+
+    /**
+     * 转换 Markdown 并将结果应用到 HTML 标签
+     * @param source {string}
+     * @param targetTag {HTMLElement}
+     */
+    Convert(source, targetTag) {
+        /**
+         * Markdown 源代码，解析过程中可能会修改这个代码
+         * @type {string}
+         */
+        this.source = source
+        /**
+         * 存放 HTML 结果的 HTML 标签
+         * @type {HTMLElement}
+         */
+        this.targetTag = targetTag
+        this.ParseFrontMatter()
+        this.MarkedParse()
+        this.PostProcess()
+    }
+
+    /**
+     * 尝试解析 MD 头部的配置信息
+     */
+    ParseFrontMatter() {
+        const res = ParseFrontMatterFromSource(this.source)
+        /**
+         * MD 的头部配置信息
+         * @type {Map<string, string>}
+         */
+        this.frontMatter = res[0]
+        this.source = res[1]
+    }
+
+    /**
+     * MD 转换成 HTML 并应用到 HTML 标签，这里是 marked 库的包装
+     */
+    MarkedParse() {
+        this.targetTag.innerHTML = marked.parse(this.source)
+    }
+
+    /**
+     * 对某些标签进行后处理
+     */
+    PostProcess() {
+        for (let k of this.postProcessor.keys()) {
+            const processor = this.postProcessor.get(k)
+            this.targetTag.querySelectorAll(k).forEach(processor)
+        }
+    }
+
+    PostProcess_Anchor(a) {
+        a.href = LinkHrefFilter(a.getAttribute('href'))
+        a.addEventListener("click", e => LinkClick(a, e))
+    }
+
+    PostProcess_Img(img) {
+        img.src = ImageSrcFilter(img.getAttribute('src'))
+    }
+
+    PostProcess_Title(title) {
+        title.id = "title-" + title.textContent
+    }
 }

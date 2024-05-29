@@ -8,10 +8,30 @@
 
     --font-size: 12pt;
     --inline-code-font-size: 12pt;
+
+    --index-background: linear-gradient(180deg, rgb(229, 229, 229), rgb(229, 229, 229));
 }
 
 html {
     background: var(--background);
+}
+
+body.index {
+    background: var(--index-background);
+    padding: 2em;
+    margin: 0;
+    overflow: hidden;
+    height: 100vh;
+}
+body.index article{
+    width: 70%;
+    max-width: 50em;
+    min-width: 20em;
+}
+
+body.index h1 {
+    background: var(--main-color);
+    color: var(--background);
 }
 
 .markdown {
@@ -85,29 +105,55 @@ html {
 }
 
 /*图片*/
-.markdown img{
+.markdown img {
     max-width: calc(100vw - var(--sidebar-resizer-width) - var(--sidebar-width) - 3em);
     margin: auto;
     display: block;
 }
 
 /*表格*/
-.markdown table{
+.markdown table {
     border-collapse: collapse;
 }
-.markdown table tbody tr:hover{
+
+.markdown table tbody tr:hover {
     background: #e0e0e0;
 }
+
 .markdown table th,
 .markdown table td {
     border-top: #b7b7b7 solid .1em;
     border-bottom: #b7b7b7 solid .1em;
 }
-.markdown table th{
+
+.markdown table th {
     padding: 0.3em 1em;
     font-size: 0.9em;
     color: #737373;
 }
+
 .markdown table td {
     padding: 0.6em;
+}
+
+/* 定义滚动条的宽度和颜色 */
+::-webkit-scrollbar {
+    width: .6em;
+    height: .4em;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    background: #00000000;
+    border-right: solid 0.6em var(--main-color);
+}
+::-webkit-scrollbar-thumb:horizontal {
+    background: #00000000;
+    border-bottom: solid 0.4em var(--main-color);
+}
+
+::-webkit-scrollbar-track {
+    background: #00000000;
+}
+::-webkit-scrollbar-track:hover {
+    background: #00000022;
 }

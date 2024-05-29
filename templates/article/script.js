@@ -1,29 +1,4 @@
 /**
- * 将 Markdown 显示到页面上
- * @param source {string} Markdown 源码
- */
-function ShowMarkdown(source) {
-    let parseResult = ParseFrontMatterFromSource(source)
-    window.frontMatter = parseResult[0]
-    source = parseResult[1]
-
-    const contentTag = document.querySelector("article#markdown-content .markdown")
-    contentTag.innerHTML = marked.parse(source)
-
-    for (let a of contentTag.querySelectorAll("a")) {
-        a.href = LinkHrefFilter(a.getAttribute('href'))
-        a.addEventListener("click", e => LinkClick(a, e))
-    }
-    for (let image of contentTag.querySelectorAll("img")) {
-        image.src = ImageSrcFilter(image.getAttribute('src'))
-    }
-    for (let h of contentTag.querySelectorAll("h1,h2,h3,h4,h5,h6")) {
-        h.id = "title-" + h.textContent
-    }
-
-}
-
-/**
  * 根据URL重新加载页面内容
  */
 function ReloadCurrentMarkdownByURL() {
@@ -36,8 +11,10 @@ function ReloadCurrentMarkdownByURL() {
         // 防止多次点击目录导致多次请求顺序错乱
         if (url !== GetCurrentPageMarkdownURL())
             return
-        ShowMarkdown(source)
-    }).catch(() => {
+        const contentTag = document.querySelector("article#markdown-content .markdown")
+        const convert = new RellwNoteMarkdownConvert()
+        convert.Convert(source, contentTag)
+    }).catch((e) => {
         articleTag.classList.add('notfound')
     }).finally(() => {
         articleTag.classList.remove('loading')
