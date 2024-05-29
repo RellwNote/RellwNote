@@ -33,12 +33,12 @@ function LinkHrefFilter(href) {
         return href
     // 站内绝对链接
     if (href.startsWith("/"))
-        return "#" + href
+        return "?md=" + href
     // 站内相对链接
     let path = href.replace(/^\.\//, "")
     if (path.startsWith("/") === false)
         path = "/" + path
-    return "#" + GetCurrentPageMarkdownURLBase() + path
+    return "?md=" + GetCurrentPageMarkdownURLBase() + path
 }
 
 /**
@@ -58,8 +58,8 @@ function GetCurrentPageMarkdownURLBase() {
  * @returns {string}
  */
 function GetCurrentPageMarkdownURL() {
-    const lastSharpIndex = document.URL.lastIndexOf("#")
-    return lastSharpIndex > 0 ? document.URL.slice(lastSharpIndex + 1) : ""
+    const params = new URLSearchParams(window.location.search)
+    return params.get("md")
 }
 
 /**
