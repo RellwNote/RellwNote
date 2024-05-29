@@ -1,14 +1,14 @@
 <style>
     :root {
         --sidebar-width: 300px;
-        --sidebar-resizer-width: 0.6em;
-        --sidebar-controller-width: 0.6em;
+        --sidebar-resizer-width: 0.8em;
+        --sidebar-controller-width: 1.2em;
+        --sidebar-handle-color:#dadada;
     }
 
-    .sidebar {
+    #sidebar {
         width: var(--sidebar-width);
-        min-width: var(--sidebar-width);
-
+        min-width: var(--sidebar-resizer-width);
         position: fixed;
         top: 0;
         bottom: 0;
@@ -17,18 +17,21 @@
         flex-direction: row;
     }
 
-    .sidebar .sidebar-content {
-        margin-right: var(--sidebar-resizer-width);
+    #sidebar .sidebar-content {
+        width: calc(var(--sidebar-width) - var(--sidebar-controller-width) - var(--sidebar-resizer-width));
+        box-sizing: border-box;
         overflow-y: auto;
-        height: 100%;
-        flex: 1;
+        padding: .6em;
+        height: 100%
     }
 
-    .sidebar .resizer {
-        position: fixed;
-        top: 0;
-        left: calc(var(--sidebar-width) - var(--sidebar-resizer-width));
-        width: var(--sidebar-resizer-width);
+    #sidebar.hide .sidebar-controller,
+    #sidebar.hide .sidebar-content {
+        display: none;
+    }
+
+    #sidebar .resizer {
+        min-width: var(--sidebar-resizer-width);
         height: 100%;
         cursor: ew-resize;
         display: flex;
@@ -36,26 +39,31 @@
         align-items: center;
     }
 
-    .sidebar .resizer:hover div {
+    #sidebar .resizer:hover div {
         height: 100%;
     }
 
-    .sidebar .resizer div {
-        background: rgba(0, 0, 0, 0.22);
+    #sidebar .resizer div {
+        background: var(--sidebar-handle-color);
         height: 3em;
         width: 50%;
         transition: height 0.2s;
     }
 
-    .sidebar .sidebar-content {
-        margin-left: var(--sidebar-controller-width);
-        margin-right: var(--sidebar-resizer-width);
-    }
-
-    .sidebar .sidebar-controller{
-        /*position: fixed;*/
+    #sidebar .sidebar-controller {
         height: 100%;
         width: var(--sidebar-controller-width);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #sidebar .sidebar-controller:hover {
+        background: var(--sidebar-handle-color);
+    }
+
+    #sidebar .sidebar-controller svg {
+        width: 60%;
     }
 
     /* 用于在拖拽调整侧边栏大小时给整篇文档加上，以防止拖拽侧边栏时选中文本 */

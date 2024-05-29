@@ -1,7 +1,11 @@
 {{template "sidebar/style.gohtml"}}
 
-<div class="sidebar">
-    <div class="sidebar-controller"></div>
+<div id="sidebar">
+    <div class="sidebar-controller" onclick="SetSidebarWidth(0)">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-caret-left" viewBox="0 0 16 16">
+            <path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/>
+        </svg>
+    </div>
     <div class="sidebar-content">
     {{DynamicTemplate .Content .Data}}
     </div>
@@ -18,12 +22,17 @@
 
     let resizing = false
     let resizingStartX = 0
-    let resizer = document.querySelector(".sidebar .resizer")
+    let resizer = document.querySelector("#sidebar .resizer")
 
     resizer.addEventListener("mousedown", (e) => {
         resizing = true
         resizingStartX = e.clientX
         document.documentElement.classList.add("cannot-select")
+    })
+
+    document.addEventListener("mouseup", (e) => {
+        resizing = false
+        document.documentElement.classList.remove("cannot-select")
     })
 
     document.addEventListener('mousemove', (e) => {
@@ -36,12 +45,15 @@
         else if (size < minWidth)
             size = minWidth
 
-        document.documentElement.style.setProperty("--sidebar-width", size + "px")
+        SetSidebarWidth(size)
     })
 
-    document.addEventListener("mouseup", (e) => {
-        resizing = false
-        document.documentElement.classList.remove("cannot-select")
-    })
+    function SetSidebarWidth(width){
+        document.documentElement.style.setProperty("--sidebar-width", width + "px")
+        if (width > 0)
+            document.getElementById("sidebar").classList.remove('hide')
+        else
+            document.getElementById("sidebar").classList.add('hide')
+    }
 </script>
 
