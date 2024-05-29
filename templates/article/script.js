@@ -12,6 +12,7 @@ function ShowMarkdown(source) {
 
     for (let a of contentTag.querySelectorAll("a")) {
         a.href = LinkHrefFilter(a.getAttribute('href'))
+        a.addEventListener("click", e => LinkClick(a, e))
     }
     for (let image of contentTag.querySelectorAll("img")) {
         image.src = ImageSrcFilter(image.getAttribute('src'))
@@ -58,6 +59,9 @@ function ScrollIntoAnchors() {
 }
 
 window.addEventListener("popstate", e => {
+    ReloadCurrentMarkdownByURL()
+})
+window.addEventListener("onMarkdownLinkChange", e => {
     ReloadCurrentMarkdownByURL()
 })
 

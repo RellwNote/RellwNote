@@ -34,6 +34,7 @@ var newFlagSetFunc = map[string]func() *flag.FlagSet{
 		res := flag.NewFlagSet("server", flag.ExitOnError)
 		res.IntVar(&config.ServerPort, "port", config.ServerPort, "server port")
 		res.StringVar(&config.ServerHost, "host", config.ServerHost, "server host")
+		res.Float64Var(&config.ServerDebugDelay, "debug_delay", config.ServerDebugDelay, "add server delay for debug")
 		return res
 	},
 }

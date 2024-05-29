@@ -6,17 +6,16 @@
  * @return string
  */
 function ImageSrcFilter(href) {
-    // 站外链接
-    if (/^[a-zA-Z]*:\/\//g.test(href))
-        return href
-    // 站内绝对链接
-    if (href.startsWith("/"))
-        return href
-    // 站内相对链接
-    let path = href.replace(/^\.\//, "")
-    if (path.startsWith("/") === false)
-        path = "/" + path
-    return GetCurrentPageMarkdownURLBase() + path
+    switch (CheckLinkType(href)) {
+        case "external":
+        case "absolute":
+            return href
+        case "relative":
+            let path = href.replace(/^\.\//, "")
+            if (path.startsWith("/") === false)
+                path = "/" + path
+            return GetCurrentPageMarkdownURLBase() + path
+    }
 }
 
 /**
@@ -28,17 +27,29 @@ function LinkHrefFilter(href) {
     // 非 md 文件
     if (href.toLowerCase().endsWith(".md") === false)
         return href
-    // 站外链接
-    if (/^[a-zA-Z]*:\/\//g.test(href))
-        return href
-    // 站内绝对链接
-    if (href.startsWith("/"))
-        return "?md=" + href
-    // 站内相对链接
-    let path = href.replace(/^\.\//, "")
-    if (path.startsWith("/") === false)
-        path = "/" + path
-    return "?md=" + GetCurrentPageMarkdownURLBase() + path
+    switch (CheckLinkType(href)) {
+        case "external":
+        case "absolute":
+            return "?md=" + href
+        case "relative":
+            let path = href.replace(/^\.\//, "")
+            if (path.startsWith("/") === false)
+                path = "/" + path
+            return "?md=" + GetCurrentPageMarkdownURLBase() + path
+    }
+}
+
+/**
+ * 检测链接的类型
+ * @param link {string}
+ * @returns {"external"|"absolute"|"relative"}
+ */
+function CheckLinkType(link) {
+    if (/^[a-zA-Z]*:\/\//g.test(link))
+        return "external"
+    if (link.startsWith("/"))
+        return "absolute"
+    return "relative"
 }
 
 /**
@@ -131,4 +142,32 @@ function ParseFrontMatterFromSource(source) {
         }
     }
     return [resMap, source]
+}
+
+/**
+ * 站内的 MD 链接建议始终这个方法做跳转，这样可以不新页面只加载 MD
+ * @param tag {HTMLAnchorElement}
+ * @param event {Event}
+ */
+function LinkClick(tag, event) {
+    event.preventDefault()
+    const href = decodeURIComponent(tag.getAttribute("href"))
+    console.log(CheckLinkType(href) + "   " + href)
+    switch (CheckLinkType(href)) {
+        case "external":
+            window.open(href)
+            break
+        case "absolute":
+        case "relative":
+            history.pushState(null, '', href)
+            window.dispatchEvent(window.note.onMarkdownLinkChange)
+            break
+    }
+}
+
+/**
+ * @type {{onMarkdownLinkChange: Event}}
+ */
+window.note = {
+    onMarkdownLinkChange: new Event("onMarkdownLinkChange"),
 }
