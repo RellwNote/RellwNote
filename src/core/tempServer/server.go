@@ -1,12 +1,9 @@
 package tempServer
 
 import (
-	"bytes"
 	"fmt"
-	"github.com/RellwNote/RellwNote/TOCGenerator"
 	"github.com/RellwNote/RellwNote/config"
 	"github.com/RellwNote/RellwNote/log"
-	"github.com/RellwNote/RellwNote/models"
 	"github.com/RellwNote/RellwNote/template"
 	"math"
 	"math/rand/v2"
@@ -24,37 +21,19 @@ func templatesPage() (res []byte, state int) {
 }
 
 func contentPage() (res []byte, state int) {
-	directory := TOCGenerator.GetTOCFromFile(filepath.Join(config.LibraryPath, config.SummaryFileName))
-
-	contentTemplateData := struct {
-		Directory models.TOCItem
-	}{
-		Directory: directory,
-	}
-
-	var buf bytes.Buffer
-	err := template.LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "content.gohtml", contentTemplateData)
+	build, err := template.BuildContentPage()
 	if err != nil {
 		return []byte(err.Error()), 500
 	}
-	return buf.Bytes(), 200
+	return build, 200
 }
 
 func indexPage() ([]byte, int) {
-	if config.LibraryFileExists("index.html") {
-		res, err := config.ReadLibraryFile("index.html")
-		if err != nil {
-			return []byte("load library index.html error"), 500
-		}
-		return res, 200
-	}
-
-	var buf bytes.Buffer
-	err := template.LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "index/index.gohtml", nil)
+	build, err := template.BuildIndexPage()
 	if err != nil {
 		return []byte(err.Error()), 500
 	}
-	return buf.Bytes(), 200
+	return build, 200
 }
 
 func staticFile(path string) (res []byte, state int) {

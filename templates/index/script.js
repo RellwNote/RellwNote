@@ -4,7 +4,7 @@ function loaded() {
             a.href = LinkHrefFilter(a.getAttribute('href'))
             const href = a.getAttribute("href")
             if(href.startsWith("?md="))
-                a.setAttribute("href","content" + href)
+                a.setAttribute("href","content.html" + href)
         }
     }
 
@@ -16,6 +16,5 @@ function loaded() {
     }).catch(err => {
         console.log(err)
     }).finally(() => {
-
     })
 }

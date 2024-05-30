@@ -3,6 +3,8 @@ package build
 import (
 	"errors"
 	"github.com/RellwNote/RellwNote/config"
+	"github.com/RellwNote/RellwNote/log"
+	"github.com/RellwNote/RellwNote/template"
 	"io"
 	"os"
 	"path"
@@ -18,9 +20,39 @@ func Build() error {
 	if err != nil {
 		return err
 	}
+	log.Info.Printf("[OK] clean build directory")
 	err = copyDirContentTo(config.LibraryPath, config.BuildOutput)
 	if err != nil {
 		return err
+	}
+	log.Info.Printf("[OK] copy library")
+	err = buildTemplate()
+	if err != nil {
+		return err
+	}
+	log.Info.Printf("[OK] build html")
+	return nil
+}
+
+func buildTemplate() error {
+	templateFuncs := map[string]func() ([]byte, error){
+		"content.html": template.BuildContentPage,
+		"index.html":   template.BuildIndexPage,
+	}
+	for fileName, builder := range templateFuncs {
+		page, err := builder()
+		if err != nil {
+			return err
+		}
+		f, err := os.OpenFile(path.Join(config.BuildOutput, fileName), os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0777)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+		_, err = f.Write(page)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
