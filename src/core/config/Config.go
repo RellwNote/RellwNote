@@ -10,6 +10,7 @@ var (
 	ServerPort       = 8333
 	ServerHost       = "localhost"
 	ServerDebugDelay = 0.0
+	BuildOutput      = "build"
 )
 
 const (

@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/RellwNote/RellwNote/build"
 	"github.com/RellwNote/RellwNote/config"
+	"github.com/RellwNote/RellwNote/log"
 	"github.com/RellwNote/RellwNote/tempServer"
 	"os"
 )
@@ -12,6 +14,12 @@ import (
 var actions = map[string]func(){
 	"server": func() {
 		tempServer.Start()
+	},
+	"build": func() {
+		err := build.Build()
+		if err != nil {
+			log.Error.Printf("%v\n", err.Error())
+		}
 	},
 	"help": func() {
 		if len(os.Args) <= 2 || os.Args[2] == "help" {
@@ -35,6 +43,11 @@ var newFlagSetFunc = map[string]func() *flag.FlagSet{
 		res.IntVar(&config.ServerPort, "port", config.ServerPort, "server port")
 		res.StringVar(&config.ServerHost, "host", config.ServerHost, "server host")
 		res.Float64Var(&config.ServerDebugDelay, "debug_delay", config.ServerDebugDelay, "add server delay for debug")
+		return res
+	},
+	"build": func() *flag.FlagSet {
+		res := flag.NewFlagSet("server", flag.ExitOnError)
+		res.StringVar(&config.BuildOutput, "output", config.BuildOutput, "build result output directory")
 		return res
 	},
 }
