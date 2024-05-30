@@ -8,7 +8,6 @@ import (
 	"github.com/RellwNote/RellwNote/models"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
-	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/text"
 	"io/fs"
 	"os"
@@ -16,15 +15,23 @@ import (
 	"strings"
 )
 
-var mdParser parser.Parser
+var mdParser = goldmark.DefaultParser()
 
-// init 初始化md parse工具
-func init() {
-	mdParser = goldmark.DefaultParser()
+func GetTOCFromFile(filepath string) (TOC models.TOCItem) {
+	content := getSummaryFileToByte(filepath)
+	TOC = parseSummaryByte(content)
+	return
 }
 
-// ParseSummaryByte 传入md数据，转成目录结构
-func ParseSummaryByte(content []byte) (directory models.TOCItem) {
+func CreateSummaryFileByDirectory(fileDir string, summaryFileName string) {
+	fullFilePath := fp.Join(fileDir, summaryFileName)
+	TOCItem := parseFileToTOC(fileDir)
+	content := parseDirectoryToByte(TOCItem)
+	writeContentToFile(fullFilePath, content)
+}
+
+// parseSummaryByte 传入md数据，转成目录结构
+func parseSummaryByte(content []byte) (directory models.TOCItem) {
 	reader := text.NewReader(content)
 	document := mdParser.Parse(reader)
 
@@ -82,8 +89,8 @@ func getLink(node ast.Node) (link string) {
 	return ""
 }
 
-// ParseDirectoryToByte 将目录结构转化成[]byte
-func ParseDirectoryToByte(TOC models.TOCItem) []byte {
+// parseDirectoryToByte 将目录结构转化成[]byte
+func parseDirectoryToByte(TOC models.TOCItem) []byte {
 	content := bytes.NewBuffer([]byte{})
 	directoryItems := TOC.TOCItems
 	for _, directoryItem := range directoryItems {
@@ -112,8 +119,8 @@ func parseDirectoryItem(TOCItem models.TOCItem, layer int) []byte {
 	return directoryItemByte.Bytes()
 }
 
-// CreateSummaryFileByFilePath 通过文件生成目录
-func CreateSummaryFileByFilePath(filepath string) (TOC models.TOCItem) {
+// parseFileToTOC 通过文件生成目录结构
+func parseFileToTOC(filepath string) (TOC models.TOCItem) {
 	summaryDir, err := os.Stat(filepath)
 	if err != nil {
 		log.Error.Println("打开目录文件失败:", err)

@@ -24,8 +24,7 @@ func templatesPage() (res []byte, state int) {
 }
 
 func contentPage() (res []byte, state int) {
-	content := TOCGenerator.GetSummaryFileToByte(config.LibraryPath, config.SummaryFileName)
-	directory := TOCGenerator.ParseSummaryByte(content)
+	directory := TOCGenerator.GetTOCFromFile(filepath.Join(config.LibraryPath, config.SummaryFileName))
 
 	contentTemplateData := struct {
 		Directory models.TOCItem
