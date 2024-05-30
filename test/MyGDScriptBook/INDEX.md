@@ -1,21 +1,13 @@
-# Unity.Log("Title")
+# GDScript 零基础图文教程！
 
+开发游戏通常离不开编写代码，Godot 支持的编程语言中 `GDScript` 和 `C#` 是使用最广泛的：
 
-```c#
-[ColorUsage(true, true)] public Color HarmoniousMonsterBubbleColor;
-public ColorByColorType BubbleColors;
-public Material HarmoniousMonsterMaterial;
-public MaterialsByColorType Materials;
-public LineRenderer lr_Laser; //控制的lr
-public LineRenderer lr_Shadow;
-public float duration; //激光消失时间
-public float maxLength; //最大距离
-```
+## 现在点击 [阅读教程](GDScript.md) 或者 [查看源码](https://github.com)
 
-## [ToRead](GDScript.md) OR [Git](https://github.com)
+- `C#` 是微软公司开发的编程语言，虽然普及率不如 `Java`、`Python` 等“超一线”语言，但其功能十分强大，且拥有“宇宙第一优雅”的编程语法，但由于它真的很强大且语法实在“优雅”，学习它会花费更多的时间与精力。
 
-else if (durationTimer >= duration / 2f && SpellHoverTimer < SpellHoverTime && !shootDone)
-{
-SpellHoverTimer += Time.deltaTime;
-durationTimer -= Time.deltaTime;
-hoverRecheckTargetTimer += Time.deltaTime;
+- 而 `GDScript` 听名字就知道这是 Godot 自己的编程语言，因为是为游戏开发而设计，语言中的每一项功能都是为了方便我们做游戏而诞生，因此在实现同样功能的情况下，`GDScript` 会比 `C#` 少很多代码，学习起来也更加轻松。
+
+> [!tip] Godot 版本
+>
+> 编写本文时 Godot 刚刚推出了 4.0 rc2，所以文中按照 4.0 版本讲解。

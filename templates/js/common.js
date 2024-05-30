@@ -241,15 +241,24 @@ class RellwNoteMarkdownConvert {
         }
     }
 
+    /**
+     * @param a {HTMLAnchorElement}
+     */
     PostProcess_Anchor(a) {
         a.href = LinkHrefFilter(a.getAttribute('href'))
         a.addEventListener("click", e => LinkClick(a, e))
     }
 
+    /**
+     * @param img {HTMLImageElement}
+     */
     PostProcess_Img(img) {
         img.src = ImageSrcFilter(img.getAttribute('src'))
     }
 
+    /**
+     * @param title {HTMLTitleElement}
+     */
     PostProcess_Title(title) {
         title.id = "title-" + title.textContent
     }
