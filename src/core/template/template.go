@@ -3,10 +3,6 @@ package template
 import (
 	"bytes"
 	"fmt"
-	"github.com/RellwNote/RellwNote/TOCGenerator"
-	"github.com/RellwNote/RellwNote/config"
-	"github.com/RellwNote/RellwNote/log"
-	"github.com/RellwNote/RellwNote/models"
 	"html/template"
 	"os"
 	"path"

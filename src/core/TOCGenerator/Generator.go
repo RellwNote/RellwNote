@@ -3,9 +3,6 @@ package TOCGenerator
 import (
 	"bytes"
 	"fmt"
-	"github.com/RellwNote/RellwNote/config"
-	"github.com/RellwNote/RellwNote/log"
-	"github.com/RellwNote/RellwNote/models"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/text"
