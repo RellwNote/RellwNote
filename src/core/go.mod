@@ -1,4 +1,4 @@
-module github.com/RellwNote/RellwNote
+module rellwnote/core
 
 go 1.21.6
 

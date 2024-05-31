@@ -3,3 +3,7 @@
 config.yaml
 build/**
 error.log
+.vscode
+build/bin
+node_modules
+frontend/dist

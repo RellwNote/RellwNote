@@ -3,12 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/RellwNote/RellwNote/build"
-	"github.com/RellwNote/RellwNote/config"
-	"github.com/RellwNote/RellwNote/log"
-	"github.com/RellwNote/RellwNote/tempServer"
 	"os"
 	"path/filepath"
+	"rellwnote/core/build"
+	"rellwnote/core/config"
+	"rellwnote/core/log"
+	"rellwnote/core/tempServer"
 )
 
 // actions 定义命令行中全部可执行的命令
