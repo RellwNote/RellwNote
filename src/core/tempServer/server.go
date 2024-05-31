@@ -66,7 +66,7 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 	urlPath := r.URL.Path
 	if urlPath == "/templates" {
 		response, state = templatesPage()
-	} else if urlPath == "/content" {
+	} else if urlPath == "/content.html" {
 		response, state = contentPage()
 	} else if urlPath == "/" || urlPath == "/index.html" {
 		response, state = indexPage()

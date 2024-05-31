@@ -9,13 +9,28 @@ import (
 	"github.com/RellwNote/RellwNote/models"
 	"html/template"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 )
 
 var LastLoadedTemplate *template.Template
 
-// 读取一个目录中的全部模版
+// LibraryData 定义了 html 模版内需要的数据格式。
+type LibraryData struct {
+	Directory   models.TOCItem
+	LibraryName string
+}
+
+// NewLibraryData 会根据当前参数创建新的 LibraryData
+func NewLibraryData() LibraryData {
+	return LibraryData{
+		Directory:   TOCGenerator.GetTOCFromFile(path.Join(config.LibraryPath, config.SummaryFileName)),
+		LibraryName: config.LibraryName,
+	}
+}
+
+// LoadFromDir 会读取一个目录中的全部模版文件，等同于重新加载模版
 func LoadFromDir(root string) *template.Template {
 	LastLoadedTemplate = template.New("main").Funcs(CustomFuncMap)
 	_ = filepath.Walk(root, func(filePath string, info os.FileInfo, err error) error {
@@ -42,17 +57,8 @@ func LoadFromDir(root string) *template.Template {
 }
 
 func BuildContentPage() ([]byte, error) {
-	content := TOCGenerator.GetSummaryFileToByte(config.LibraryPath, config.SummaryFileName)
-	directory := TOCGenerator.ParseSummaryByte(content)
-
-	contentTemplateData := struct {
-		Directory models.TOCItem
-	}{
-		Directory: directory,
-	}
-
 	var buf bytes.Buffer
-	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "content.gohtml", contentTemplateData)
+	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "content.gohtml", NewLibraryData())
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +75,7 @@ func BuildIndexPage() ([]byte, error) {
 	}
 
 	var buf bytes.Buffer
-	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "index/index.gohtml", nil)
+	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "index/index.gohtml", NewLibraryData())
 	if err != nil {
 		return nil, err
 	}

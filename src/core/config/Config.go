@@ -7,6 +7,7 @@ import (
 
 var (
 	LibraryPath      = "library"
+	LibraryName      = ""
 	ServerPort       = 8333
 	ServerHost       = "localhost"
 	ServerDebugDelay = 0.0

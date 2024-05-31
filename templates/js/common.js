@@ -239,6 +239,7 @@ class RellwNoteMarkdownConvert {
             const processor = this.postProcessor.get(k)
             this.targetTag.querySelectorAll(k).forEach(processor)
         }
+        this.PostProcess_HTMLTitle()
     }
 
     /**
@@ -261,5 +262,15 @@ class RellwNoteMarkdownConvert {
      */
     PostProcess_Title(title) {
         title.id = "title-" + title.textContent
+    }
+
+    /**
+     * 获取 MD 解析结果中的第一个标题作为标签页标题
+     */
+    PostProcess_HTMLTitle() {
+        const title = this.targetTag.querySelector("h1,h2,h3,h4,h5,h6")
+        if (title) {
+            document.title = title.textContent
+        }
     }
 }
