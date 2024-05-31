@@ -61,17 +61,8 @@ func LoadFromDir(root string) *template.Template {
 }
 
 func BuildContentPage() ([]byte, error) {
-	content := TOCGenerator.GetSummaryFileToByte(config.LibraryPath, config.SummaryFileName)
-	directory := TOCGenerator.ParseSummaryByte(content)
-
-	contentTemplateData := struct {
-		Directory models.TOCItem
-	}{
-		Directory: directory,
-	}
-
 	var buf bytes.Buffer
-	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "content.gohtml", contentTemplateData)
+	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "content.gohtml", NewLibraryData())
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +79,7 @@ func BuildIndexPage() ([]byte, error) {
 	}
 
 	var buf bytes.Buffer
-	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "index/index.gohtml", nil)
+	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "index/index.gohtml", NewLibraryData())
 	if err != nil {
 		return nil, err
 	}
