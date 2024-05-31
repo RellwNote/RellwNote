@@ -3,6 +3,7 @@ package template
 import (
 	"bytes"
 	"errors"
+	"github.com/RellwNote/RellwNote/config"
 	"html/template"
 	"math/rand"
 	"os"

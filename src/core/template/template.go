@@ -3,6 +3,10 @@ package template
 import (
 	"bytes"
 	"fmt"
+	"github.com/RellwNote/RellwNote/TOCGenerator"
+	"github.com/RellwNote/RellwNote/config"
+	"github.com/RellwNote/RellwNote/log"
+	"github.com/RellwNote/RellwNote/models"
 	"html/template"
 	"os"
 	"path"
@@ -57,8 +61,17 @@ func LoadFromDir(root string) *template.Template {
 }
 
 func BuildContentPage() ([]byte, error) {
+	content := TOCGenerator.GetSummaryFileToByte(config.LibraryPath, config.SummaryFileName)
+	directory := TOCGenerator.ParseSummaryByte(content)
+
+	contentTemplateData := struct {
+		Directory models.TOCItem
+	}{
+		Directory: directory,
+	}
+
 	var buf bytes.Buffer
-	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "content.gohtml", NewLibraryData())
+	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "content.gohtml", contentTemplateData)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +88,7 @@ func BuildIndexPage() ([]byte, error) {
 	}
 
 	var buf bytes.Buffer
-	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "index/index.gohtml", NewLibraryData())
+	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "index/index.gohtml", nil)
 	if err != nil {
 		return nil, err
 	}

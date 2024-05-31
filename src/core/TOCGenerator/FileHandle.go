@@ -1,6 +1,7 @@
 package TOCGenerator
 
 import (
+	"github.com/RellwNote/RellwNote/log"
 	"os"
 	"rellwnote/core/log"
 	"strings"
