@@ -67,7 +67,7 @@ func copyFaviconIfMission() error {
 	if _, hasIcon := library.GetIconFileName(); hasIcon {
 		return nil
 	}
-	return copyFileTo(path.Join(config.TemplateDir, "favicon.svg"), path.Join(config.BuildOutput, "favicon.svg"))
+	return copyFileTo(path.Join(config.BaseDir, config.TemplateDir, "favicon.svg"), path.Join(config.BuildOutput, "favicon.svg"))
 }
 
 func recreateOutputDirectory() error {
@@ -171,20 +171,4 @@ func checkDirIsEmpty(dir string) (bool, error) {
 	} else {
 		return false, nil
 	}
-}
-
-func isFile(filepath string) bool {
-	stat, err := os.Stat(filepath)
-	if err != nil {
-		return false
-	}
-	return !stat.IsDir()
-}
-
-func isDir(filepath string) bool {
-	stat, err := os.Stat(filepath)
-	if err != nil {
-		return false
-	}
-	return stat.IsDir()
 }

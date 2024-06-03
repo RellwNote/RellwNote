@@ -15,7 +15,7 @@ import (
 )
 
 func templatesPage() (res []byte, state int) {
-	for _, t := range template.LoadFromDir(config.TemplateDir).Templates() {
+	for _, t := range template.Load().Templates() {
 		res = append(res, []byte(t.Name()+"\n")...)
 	}
 	return res, 200
@@ -45,7 +45,7 @@ func favicon() ([]byte, int) {
 		}
 		return icon, 200
 	}
-	file, err := os.ReadFile(path.Join(config.TemplateDir, "favicon.svg"))
+	file, err := os.ReadFile(path.Join(config.BaseDir, config.TemplateDir, "favicon.svg"))
 	if err != nil {
 		return nil, 500
 	}

@@ -7,9 +7,9 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"rellwnote/core/TOCGenerator"
 	"rellwnote/core/config"
 	"rellwnote/core/library"
+	"rellwnote/core/library/toc"
 	"rellwnote/core/log"
 	"rellwnote/core/models"
 	"strings"
@@ -27,7 +27,7 @@ type LibraryData struct {
 // NewLibraryData 会根据当前参数创建新的 LibraryData
 func NewLibraryData() LibraryData {
 	res := LibraryData{
-		Directory:   TOCGenerator.GetTOCFromFile(path.Join(config.LibraryPath, config.SummaryFileName)),
+		Directory:   toc.GetTOCFromFile(path.Join(config.LibraryPath, config.SummaryFileName)),
 		LibraryName: config.LibraryName,
 	}
 	if name, has := library.GetIconFileName(); has {
@@ -38,10 +38,12 @@ func NewLibraryData() LibraryData {
 	return res
 }
 
-// LoadFromDir 会读取一个目录中的全部模版文件，等同于重新加载模版
-func LoadFromDir(root string) *template.Template {
+// Load 会读取一个目录中的全部模版文件，等同于重新加载模版
+func Load() *template.Template {
 	LastLoadedTemplate = template.New("main").Funcs(CustomFuncMap)
-	_ = filepath.Walk(root, func(filePath string, info os.FileInfo, err error) error {
+	startPath := path.Join(config.BaseDir, config.TemplateDir)
+	startPath, _ = filepath.Abs(startPath)
+	_ = filepath.Walk(startPath, func(filePath string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -53,7 +55,7 @@ func LoadFromDir(root string) *template.Template {
 		}
 		read, _ := os.ReadFile(filePath)
 		key := filepath.ToSlash(filePath)
-		key = key[strings.Index(key, "/")+1:]
+		key = key[len(startPath)+1:]
 		_, err = LastLoadedTemplate.Parse(fmt.Sprintf(`{{define "%s"}}%s{{end}}`, key, read))
 		if err != nil {
 			log.Error.Printf("模版 %s 中存在错误：%s\n", filePath, err.Error())
@@ -66,7 +68,7 @@ func LoadFromDir(root string) *template.Template {
 
 func BuildContentPage() ([]byte, error) {
 	var buf bytes.Buffer
-	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "content.gohtml", NewLibraryData())
+	err := Load().ExecuteTemplate(&buf, "content.gohtml", NewLibraryData())
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +85,7 @@ func BuildIndexPage() ([]byte, error) {
 	}
 
 	var buf bytes.Buffer
-	err := LoadFromDir(config.TemplateDir).ExecuteTemplate(&buf, "index/index.gohtml", NewLibraryData())
+	err := Load().ExecuteTemplate(&buf, "index/index.gohtml", NewLibraryData())
 	if err != nil {
 		return nil, err
 	}

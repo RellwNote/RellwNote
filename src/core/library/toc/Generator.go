@@ -1,4 +1,4 @@
-package TOCGenerator
+package toc
 
 import (
 	"bytes"
