@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"rellwnote/core/TOCGenerator"
 	"rellwnote/core/config"
+	"rellwnote/core/library"
 	"rellwnote/core/log"
 	"rellwnote/core/models"
 	"strings"
@@ -18,16 +19,23 @@ var LastLoadedTemplate *template.Template
 
 // LibraryData 定义了 html 模版内需要的数据格式。
 type LibraryData struct {
-	Directory   models.TOCItem
-	LibraryName string
+	Directory       models.TOCItem
+	LibraryName     string
+	FaviconFileName string
 }
 
 // NewLibraryData 会根据当前参数创建新的 LibraryData
 func NewLibraryData() LibraryData {
-	return LibraryData{
+	res := LibraryData{
 		Directory:   TOCGenerator.GetTOCFromFile(path.Join(config.LibraryPath, config.SummaryFileName)),
 		LibraryName: config.LibraryName,
 	}
+	if name, has := library.GetIconFileName(); has {
+		res.FaviconFileName = name
+	} else {
+		res.FaviconFileName = "favicon.svg"
+	}
+	return res
 }
 
 // LoadFromDir 会读取一个目录中的全部模版文件，等同于重新加载模版
@@ -66,8 +74,8 @@ func BuildContentPage() ([]byte, error) {
 }
 
 func BuildIndexPage() ([]byte, error) {
-	if config.LibraryFileExists("index.html") {
-		res, err := config.ReadLibraryFile("index.html")
+	if library.FileExists("index.html") {
+		res, err := library.ReadFile("index.html")
 		if err != nil {
 			return nil, err
 		}

@@ -8,13 +8,13 @@ import (
 	"rellwnote/core/build"
 	"rellwnote/core/config"
 	"rellwnote/core/log"
-	"rellwnote/core/tempServer"
+	"rellwnote/core/server"
 )
 
 // actions 定义命令行中全部可执行的命令
 var actions = map[string]func(){
 	"server": func() {
-		tempServer.Start()
+		server.Start()
 	},
 	"build": func() {
 		err := build.Build()

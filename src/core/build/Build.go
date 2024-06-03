@@ -7,6 +7,7 @@ import (
 	"path"
 	"path/filepath"
 	"rellwnote/core/config"
+	"rellwnote/core/library"
 	"rellwnote/core/log"
 	"rellwnote/core/template"
 )
@@ -26,6 +27,11 @@ func Build() error {
 		return err
 	}
 	log.Info.Printf("[OK] copy library")
+	err = copyFaviconIfMission()
+	if err != nil {
+		return err
+	}
+	log.Info.Printf("[OK] favicon process")
 	err = buildTemplate()
 	if err != nil {
 		return err
@@ -57,6 +63,13 @@ func buildTemplate() error {
 	return nil
 }
 
+func copyFaviconIfMission() error {
+	if _, hasIcon := library.GetIconFileName(); hasIcon {
+		return nil
+	}
+	return copyFileTo(path.Join(config.TemplateDir, "favicon.svg"), path.Join(config.BuildOutput, "favicon.svg"))
+}
+
 func recreateOutputDirectory() error {
 	err := removeOutputDirectory()
 	if err != nil {
@@ -83,16 +96,20 @@ func copyDirContentTo(sourceDir, targetDir string) error {
 		if info.IsDir() {
 			return os.MkdirAll(targetPath, info.Mode())
 		}
-		target, err := os.OpenFile(targetPath, os.O_RDWR|os.O_CREATE, info.Mode())
-		origin, err := os.OpenFile(walkPath, os.O_RDONLY, info.Mode())
-		if err != nil {
-			return err
-		}
-		defer origin.Close()
-		defer target.Close()
-		_, err = io.Copy(target, origin)
-		return err
+		return copyFileTo(walkPath, targetPath)
 	})
+	return err
+}
+
+func copyFileTo(sourcePath, targetPath string) error {
+	target, err := os.OpenFile(targetPath, os.O_RDWR|os.O_CREATE, 0644)
+	origin, err := os.OpenFile(sourcePath, os.O_RDONLY, 0644)
+	if err != nil {
+		return err
+	}
+	defer origin.Close()
+	defer target.Close()
+	_, err = io.Copy(target, origin)
 	return err
 }
 
@@ -154,4 +171,20 @@ func checkDirIsEmpty(dir string) (bool, error) {
 	} else {
 		return false, nil
 	}
+}
+
+func isFile(filepath string) bool {
+	stat, err := os.Stat(filepath)
+	if err != nil {
+		return false
+	}
+	return !stat.IsDir()
+}
+
+func isDir(filepath string) bool {
+	stat, err := os.Stat(filepath)
+	if err != nil {
+		return false
+	}
+	return stat.IsDir()
 }

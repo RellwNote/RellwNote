@@ -1,4 +1,4 @@
-package tempServer
+package server
 
 import (
 	"fmt"
@@ -6,8 +6,9 @@ import (
 	"math/rand/v2"
 	"net/http"
 	"os"
-	"path/filepath"
+	"path"
 	"rellwnote/core/config"
+	"rellwnote/core/library"
 	"rellwnote/core/log"
 	"rellwnote/core/template"
 	"time"
@@ -36,24 +37,30 @@ func indexPage() ([]byte, int) {
 	return build, 200
 }
 
-func staticFile(path string) (res []byte, state int) {
-	filePath := filepath.Join(config.LibraryPath, path)
-	file, err := os.Stat(filePath)
-	if err != nil {
-		return nil, 404
+func favicon() ([]byte, int) {
+	if name, has := library.GetIconFileName(); has {
+		icon, err := library.ReadFile(name)
+		if err != nil {
+			return nil, 500
+		}
+		return icon, 200
 	}
-	if file.IsDir() {
-		log.Error.Println("尝试访问静态文件", filePath, "，但这是一个目录")
-		return nil, 404
-	}
-
-	fileByte, err := os.ReadFile(filePath)
+	file, err := os.ReadFile(path.Join(config.TemplateDir, "favicon.svg"))
 	if err != nil {
-		log.Error.Println("尝试访问静态文件", filePath, "出现错误：", err.Error())
 		return nil, 500
 	}
+	return file, 200
+}
 
-	return fileByte, 200
+func staticFile(url string) (res []byte, state int) {
+	if library.FileExists(url) {
+		file, err := library.ReadFile(url)
+		if err != nil {
+			return nil, 500
+		}
+		return file, 200
+	}
+	return nil, 404
 }
 
 func httpHandler(w http.ResponseWriter, r *http.Request) {
@@ -68,6 +75,13 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 		response, state = templatesPage()
 	} else if urlPath == "/content.html" {
 		response, state = contentPage()
+	} else if len(urlPath) >= 12 && urlPath[:9] == "/favicon." {
+		response, state = favicon()
+		if urlPath[8:12] == ".svg" {
+			w.Header().Set("Content-Type", "image/svg+xml")
+		} else {
+			w.Header().Set("Content-Type", "image")
+		}
 	} else if urlPath == "/" || urlPath == "/index.html" {
 		response, state = indexPage()
 	} else {
