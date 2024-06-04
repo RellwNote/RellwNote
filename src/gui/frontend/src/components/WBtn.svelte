@@ -1,30 +1,17 @@
 <script lang="ts">
     import {onMount} from "svelte";
     export let color: string = "info";
+    export let size: string = "medium";
 
+    let btnRef: any;
 
-    onMount(() => {
-        let btnDom = document.getElementById("WBtn");
-        switch (color) {
-            case "info":
-                btnDom.style.backgroundColor = "#7c7cd1";
-                break;
-            case "success":
-                btnDom.style.backgroundColor = "#FF0000";
-                break;
-        }
-
-    })
 
 </script>
 
-<button class="btn WBtn" id="WBtn"><slot></slot></button>
+<button class="WBtn {color} {size}" bind:this={btnRef}><slot></slot></button>
 
 <style>
     .WBtn {
-        width: 7rem;
-        height: 2.7rem;
-
         border-radius: 0.4rem;
 
         font-size: 1.1rem;
@@ -33,5 +20,39 @@
 
     .WBtn:hover {
         opacity: 0.8;
+    }
+
+    .info {
+        background-color: #7c7cd1;
+    }
+
+    .success {
+        background-color: #4000ff;
+    }
+
+    .warning {
+         background-color: #98ec53;
+    }
+
+    .error {
+          background-color: #FF0000;
+    }
+
+    .small {
+        width: 6rem;
+        height: 2.5rem;
+    }
+
+    .large {
+        width: 15rem;
+        height: 5rem;
+
+        font-size: 1.8rem;
+    }
+
+    .medium {
+        width: 10rem;
+        height: 3rem;
+        font-size: 1.3rem;
     }
 </style>

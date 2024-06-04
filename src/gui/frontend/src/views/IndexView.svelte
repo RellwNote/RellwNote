@@ -5,7 +5,7 @@
 <div class="indexWindow">
     <div class="serverStart">
         <WInput type="text" placeholder=":8888"/>
-        <WBtn color="info">启动</WBtn>
+        <WBtn color="info" size="medium">启动</WBtn>
     </div>
     <div class="noteDetail">
 
