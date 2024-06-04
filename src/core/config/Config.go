@@ -17,8 +17,10 @@ var (
 )
 
 const (
-	TemplateDir     = "templates"
-	SummaryFileName = "SUMMARY.md"
+	TemplateDir              = "templates"
+	ExtensionDir             = "extensions"
+	BuiltinExtensionFileName = "builtin"
+	SummaryFileName          = "SUMMARY.md"
 )
 
 func init() {

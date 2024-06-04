@@ -76,14 +76,14 @@ body.index h1 {
 .markdown pre {
     padding: 1em;
     border-radius: .3em;
-    background: #3d3d3d;
+    background: #262626;
     color: white;
     overflow: auto;
 }
 
 /*引用*/
 .markdown blockquote {
-    background: #e5e5e5;
+    background: #00000011;
     margin: 0.5em;
     padding: 0.5em 1em;
     border-left: solid 0.3em #3d3d3d;

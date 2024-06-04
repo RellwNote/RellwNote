@@ -8,6 +8,7 @@ import (
 	"path"
 	"path/filepath"
 	"rellwnote/core/config"
+	"rellwnote/core/extensions"
 	"rellwnote/core/library"
 	"rellwnote/core/library/toc"
 	"rellwnote/core/log"
@@ -22,6 +23,7 @@ type LibraryData struct {
 	Directory       models.TOCItem
 	LibraryName     string
 	FaviconFileName string
+	Extensions      []extensions.Extension
 }
 
 // NewLibraryData 会根据当前参数创建新的 LibraryData
@@ -35,6 +37,11 @@ func NewLibraryData() LibraryData {
 	} else {
 		res.FaviconFileName = "favicon.svg"
 	}
+
+	for _, v := range extensions.LoadAll() {
+		res.Extensions = append(res.Extensions, v)
+	}
+
 	return res
 }
 

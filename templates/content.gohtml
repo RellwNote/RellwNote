@@ -14,6 +14,12 @@
         }
     </style>
     <script>{{JS "js/common.js"}}</script>
+    {{range .Extensions}} {{if .BuiltinCSS}}
+        <style>{{CSSCode .BuiltinCSS}}</style>
+    {{end}} {{end}}
+    {{range .Extensions}} {{if .BuiltinJS}}
+        <script>{{JSCode .BuiltinJS}}</script>
+    {{end}} {{end}}
 </head>
 <body>
 {{template "sidebar/sidebar.gohtml" Dict "Content" "toc/toc.gohtml" "Data" .Directory}}

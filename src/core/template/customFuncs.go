@@ -17,7 +17,9 @@ var CustomFuncMap = template.FuncMap{
 	"Iif":             Iif,
 	"RandomString":    RandomString,
 	"JS":              JS,
+	"JSCode":          JSCode,
 	"CSS":             CSS,
+	"CSSCode":         CSSCode,
 	"URL":             URL,
 	"DynamicTemplate": DynamicTemplate,
 	"Add": func(a, b int) int {
@@ -68,12 +70,20 @@ func JS(path string) interface{} {
 	return template.JS(res)
 }
 
+func JSCode(code string) interface{} {
+	return template.JS(code)
+}
+
 func CSS(path string) interface{} {
 	res, err := os.ReadFile(filepath.Join(config.BaseDir, config.TemplateDir, path))
 	if err != nil {
 		return err.Error()
 	}
 	return template.CSS(res)
+}
+
+func CSSCode(code string) interface{} {
+	return template.CSS(code)
 }
 
 func URL(url string) interface{} {

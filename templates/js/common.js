@@ -166,14 +166,21 @@ function LinkClick(tag, event) {
 }
 
 /**
- * @type {{onMarkdownLinkChange: Event}}
+ * @typedef {Object} Extension
+ * @property {function(string):string ?} MarkdownPreprocessor
+ * @property {function(HTMLElement) ?} MarkdownPostprocessor
+ */
+
+/**
+ * @type {{extensions: Extension[], onMarkdownLinkChange: Event}}
  */
 window.note = {
     onMarkdownLinkChange: new Event("onMarkdownLinkChange"),
+    extensions: [],
 }
 
 /**
- * 符合 RellwNote 的 Markdonw 到 HTML 的转换器
+ * 符合 RellwNote 的 Markdown 到 HTML 的转换器
  */
 class RellwNoteMarkdownConvert {
     /**
@@ -207,8 +214,11 @@ class RellwNoteMarkdownConvert {
          */
         this.targetTag = targetTag
         this.ParseFrontMatter()
+        this.PreProcess()
+        this.ExtensionPreProcess()
         this.MarkedParse()
         this.PostProcess()
+        this.ExtensionPostProcess()
     }
 
     /**
@@ -232,6 +242,12 @@ class RellwNoteMarkdownConvert {
     }
 
     /**
+     * 对 MD 源码进行预处理
+     */
+    PreProcess() {
+    }
+
+    /**
      * 对某些标签进行后处理
      */
     PostProcess() {
@@ -240,6 +256,32 @@ class RellwNoteMarkdownConvert {
             this.targetTag.querySelectorAll(k).forEach(processor)
         }
         this.PostProcess_HTMLTitle()
+    }
+
+    /**
+     * 应用插件的 Markdown 预处理，优先级低于内置的 PreProcess
+     */
+    ExtensionPreProcess(){
+        for (let ext of window.note.extensions)
+            if (ext.MarkdownPreprocessor)
+                try {
+                    this.source = ext.MarkdownPreprocessor(this.source)
+                } catch (e) {
+                    console.error(e)
+                }
+    }
+
+    /**
+     * 应用插件的 Markdown 后处理，优先级低于内置的 PostProcess
+     */
+    ExtensionPostProcess(){
+        for (let ext of window.note.extensions)
+            if (ext.MarkdownPostprocessor)
+                try {
+                    ext.MarkdownPostprocessor(this.targetTag)
+                } catch (e) {
+                    console.error(e)
+                }
     }
 
     /**

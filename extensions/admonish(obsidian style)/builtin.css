@@ -1,0 +1,15 @@
+.markdown blockquote.admonish-obsidian-style{
+    padding: 0;
+    background: #00000011;
+}
+.markdown blockquote.admonish-obsidian-style .title{
+    background: var(--main-color);
+    color: white;
+    padding: 1em;
+    font-weight: bold;
+    margin: 0;
+}
+
+.markdown blockquote.admonish-obsidian-style .body{
+    padding: .5em 1em;
+}
