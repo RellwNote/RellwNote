@@ -3,6 +3,7 @@
 *.log
 config.yaml
 build/**
+build
 error.log
 build/bin
 node_modules
