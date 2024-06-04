@@ -9,7 +9,7 @@
         <div class="contentLogo">RellwNoteX</div>
         <ContentListComponent />
     </div>
-    <div class="mainView">
+    <div class="mainColor mainView">
         <Router {routes} />
     </div>
 </div>
@@ -17,7 +17,6 @@
 <style>
     .container {
         height: 100vh;
-
         display: flex;
 
     }
@@ -27,11 +26,9 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        background-color: #295560;
     }
     .mainView {
         flex: 3;
-        background: #fff7f7;
     }
     .contentLogo {
         color: white;
