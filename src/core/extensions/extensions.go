@@ -13,6 +13,7 @@ import (
 	"path"
 	"path/filepath"
 	"rellwnote/core/config"
+	"rellwnote/core/log"
 )
 
 type Extension struct {
@@ -21,39 +22,30 @@ type Extension struct {
 	BuiltinCSS string
 }
 
-// LoadAll 会读取全部可安装扩展的目录下的全部扩展
+// LoadAll 会读取全部可安装扩展的目录下的全部扩展，这些扩展可能来自本软件位置或文档库的 extensions 文件夹
 func LoadAll() (res []Extension) {
-	load := func(dir string) {
-		dir, err := filepath.Abs(dir)
+	extDirs := append(
+		loadAllExtensionDir(path.Join(config.LibraryPath, config.ExtensionDir)),
+		loadAllExtensionDir(path.Join(config.BaseDir, config.ExtensionDir))...,
+	)
+	for _, dir := range extDirs {
+		e, err := Load(dir)
 		if err != nil {
-			return
+			log.Error.Printf("Load extension %s error: %v", dir, err)
+			continue
 		}
-		open, err := os.Open(dir)
-		if err != nil {
-			return
-		}
-		readDir, err := open.ReadDir(-1)
-		if err != nil {
-			return
-		}
-		for _, i := range readDir {
-			if !i.IsDir() {
-				continue
+		for _, o := range res {
+			if o.Name == e.Name {
+				log.Warning.Printf("Extension %s already exists", e.Name)
+				break
 			}
-			fullPath := filepath.ToSlash(path.Join(dir, i.Name()))
-			e, err := Load(fullPath)
-			if err != nil {
-				println(err.Error())
-				continue
-			}
-			res = append(res, e)
 		}
+		res = append(res, e)
 	}
-	load(path.Join(config.LibraryPath, config.ExtensionDir))
-	load(path.Join(config.BaseDir, config.ExtensionDir))
 	return
 }
 
+// Load 用于读取一个指定路径的扩展
 func Load(extPath string) (ext Extension, err error) {
 	extPath, _ = filepath.Abs(extPath)
 
@@ -65,6 +57,33 @@ func Load(extPath string) (ext Extension, err error) {
 	css, cssErr := os.ReadFile(path.Join(extPath, config.BuiltinExtensionFileName+".css"))
 	if cssErr == nil {
 		ext.BuiltinCSS = string(css)
+	}
+	return
+}
+
+// loadAllExtensionDir 会读取一个目录下的可用扩展，并返回这些扩展的完整路径
+func loadAllExtensionDir(extPath string) (res []string) {
+	extPath, err := filepath.Abs(extPath)
+	if err != nil {
+		return
+	}
+	open, err := os.Open(extPath)
+	if err != nil {
+		return
+	}
+	readDir, err := open.ReadDir(-1)
+	if err != nil {
+		return
+	}
+	for _, i := range readDir {
+		if !i.IsDir() {
+			continue
+		}
+		if i.Name()[0] == '.' {
+			continue
+		}
+		fullPath := path.Join(extPath, i.Name())
+		res = append(res, fullPath)
 	}
 	return
 }
