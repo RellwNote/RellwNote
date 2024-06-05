@@ -1,25 +1,5 @@
-
-
 html {
     background: var(--background);
-}
-
-body.index {
-    background: var(--background);
-    padding: 2em;
-    margin: 0;
-    overflow: hidden;
-    height: 100vh;
-}
-body.index article{
-    width: 70%;
-    max-width: 50em;
-    min-width: 20em;
-}
-
-body.index h1 {
-    background: var(--primary-color);
-    color: var(--background);
 }
 
 .markdown {
@@ -42,7 +22,6 @@ body.index h1 {
 
 .markdown h1 {
     text-align: center;
-    border-bottom: var(--primary-color-vivid) 0.1em solid;
     padding: 1.6em 1em;
     margin: 0;
 }
@@ -50,15 +29,6 @@ body.index h1 {
 .markdown h2 {
     margin-top: 2.6em;
     margin-bottom: 1em;
-}
-
-.markdown h2::after {
-    margin-top: 0.2em;
-    width: 3em;
-    height: 0.1em;
-    background: var(--primary-color-vivid);
-    display: block;
-    content: "";
 }
 
 /*行内代码*/
@@ -73,8 +43,8 @@ body.index h1 {
 
 /*代码块*/
 .markdown pre {
-    padding: 1em;
     border-radius: var(--radius-big);
+    padding: var(--radius-big);
     background: var(--background-code-block);
     color: var(--text-color);
     overflow: auto;
@@ -82,11 +52,9 @@ body.index h1 {
 
 /*引用*/
 .markdown blockquote {
+    padding: 1em 2em;
     background: var(--background-quote);
-    margin: 0.5em;
-    padding: 0.5em 1em;
     color: var(--text-color-neutal);
-    border-left: solid 0.3em var(--primary-color);
 }
 
 /*超链接*/

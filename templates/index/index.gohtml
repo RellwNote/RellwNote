@@ -4,10 +4,10 @@
     <title>{{.LibraryName}}</title>
     <link rel="shortcut icon" href="{{.FaviconFileName}}" type="image/x-icon">
     <style>{{CSS "index/style.css"}}</style>
-    <style>{{CSS "themes/rellw.css"}}</style>
     <script>{{JS "index/script.js"}}</script>
     <script>{{JS "js/marked.min.js"}}</script>
     <script>{{JS "js/common.js"}}</script>
+    <style>{{CSS "themes/default.css"}}</style>
     {{range .Extensions}} {{if .BuiltinCSS}}
         <style>{{CSSCode .BuiltinCSS}}</style>
     {{end}} {{end}}

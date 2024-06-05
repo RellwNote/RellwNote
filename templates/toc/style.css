@@ -23,13 +23,13 @@
 }
 
 .site-toc hr{
-    background: var(--main-color);
+    background: var(--primary-color);
     border: none;
     height: 2px;
 }
 
 .site-toc li.deep-1.has-child {
-    border-top: var(--main-color) 0.2em solid;
+    border-top: var(--primary-color) 0.2em solid;
     padding: 0.3em;
 }
 
@@ -49,7 +49,7 @@
     margin: 0.1em;
 }
 .site-toc li.deep-2 > ul{
-    border-left: var(--main-color) 0.15em dotted;
+    border-left: var(--primary-color) 0.15em dotted;
     margin-left: 0.7em;
     padding-left: 0.3em;
 }
@@ -67,7 +67,7 @@
 
 .site-toc a:hover{
     border-radius: 0.2em;
-    background: var(--hover-color);
+    background: var(--primary-color-light);
     transition: background 0s;
 }
 .site-toc a {

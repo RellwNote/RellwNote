@@ -1,0 +1,27 @@
+:root {
+    --text-color: #222;
+    --text-color-accent: #000;
+    --text-color-neutal: #444;
+
+    --background: #fff;
+    --background-code: #eee;
+    --background-code-block: #eee;
+    --background-quote: #eee;
+
+    --primary-color: #e05353;
+    --primary-color-vivid: #f32525;
+    --primary-color-light: #ffd8d8;
+
+    --secondary-color: #e549c4;
+    --secondary-color-vivid: #ee00b6;
+
+    --accent-color: #f6d226;
+
+    --color-border: #aaa;
+
+    --font-size: 12pt;
+    --inline-code-font-size: 12pt;
+
+    --radius-small: 2pt;
+    --radius-big: 4pt;
+}
