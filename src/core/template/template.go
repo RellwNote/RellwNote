@@ -12,7 +12,6 @@ import (
 	"rellwnote/core/library"
 	"rellwnote/core/library/toc"
 	"rellwnote/core/log"
-	"rellwnote/core/models"
 	"strings"
 )
 
@@ -20,7 +19,7 @@ var LastLoadedTemplate *template.Template
 
 // LibraryData 定义了 html 模版内需要的数据格式。
 type LibraryData struct {
-	Directory       models.TOCItem
+	Directory       toc.Item
 	LibraryName     string
 	FaviconFileName string
 	Extensions      []extensions.Extension

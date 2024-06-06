@@ -11,13 +11,12 @@ import (
 	fp "path/filepath"
 	"rellwnote/core/config"
 	"rellwnote/core/log"
-	"rellwnote/core/models"
 	"strings"
 )
 
 var mdParser = goldmark.DefaultParser()
 
-func GetTOCFromFile(filepath string) (TOC models.TOCItem, err error) {
+func GetTOCFromFile(filepath string) (TOC Item, err error) {
 	content, err := getSummaryFileToByte(filepath)
 	TOC = parseSummaryByte(content)
 	return
@@ -35,34 +34,34 @@ func CreateSummaryFileByDirectory(fileDir string, summaryFileName string) error 
 }
 
 // parseSummaryByte 传入md数据，转成目录结构
-func parseSummaryByte(content []byte) (directory models.TOCItem) {
+func parseSummaryByte(content []byte) (directory Item) {
 	reader := text.NewReader(content)
 	document := mdParser.Parse(reader)
 
-	var rootDirectoryItem models.TOCItem
+	var rootDirectoryItem Item
 	parseList(document, content, &rootDirectoryItem)
 
 	return rootDirectoryItem
 }
 
 // parseList 传入List节点，生成List目录结构
-func parseList(node ast.Node, content []byte, rootDirectoryItem *models.TOCItem) {
+func parseList(node ast.Node, content []byte, rootDirectoryItem *Item) {
 	for c := node.FirstChild(); c != nil; c = c.NextSibling() {
 		switch item := c.(type) {
 		case *ast.List:
 			parseList(item, content, rootDirectoryItem)
 		case *ast.ListItem:
-			listItemDirectoryItem := &models.TOCItem{
+			listItemDirectoryItem := &Item{
 				Title:        getTitle(item, content),
 				MarkdownFile: getLink(item),
-				TOCItems:     make([]models.TOCItem, 0),
+				TOCItems:     make([]Item, 0),
 			}
 			parseList(item, content, listItemDirectoryItem)
 			rootDirectoryItem.TOCItems = append(rootDirectoryItem.TOCItems, *listItemDirectoryItem)
 		case *ast.ThematicBreak:
-			listItemDirectoryItem := &models.TOCItem{
+			listItemDirectoryItem := &Item{
 				Title:    "---",
-				TOCItems: make([]models.TOCItem, 0),
+				TOCItems: make([]Item, 0),
 			}
 			rootDirectoryItem.TOCItems = append(rootDirectoryItem.TOCItems, *listItemDirectoryItem)
 		}
@@ -94,7 +93,7 @@ func getLink(node ast.Node) (link string) {
 }
 
 // parseDirectoryToByte 将目录结构转化成[]byte
-func parseDirectoryToByte(TOC models.TOCItem) []byte {
+func parseDirectoryToByte(TOC Item) []byte {
 	content := bytes.NewBuffer([]byte{})
 	directoryItems := TOC.TOCItems
 	for _, directoryItem := range directoryItems {
@@ -103,7 +102,7 @@ func parseDirectoryToByte(TOC models.TOCItem) []byte {
 	return content.Bytes()
 }
 
-func parseDirectoryItem(TOCItem models.TOCItem, layer int) []byte {
+func parseDirectoryItem(TOCItem Item, layer int) []byte {
 	directoryItemByte := bytes.NewBuffer([]byte{})
 	for i := 0; i < layer; i++ {
 		directoryItemByte.WriteString("\t")
@@ -124,7 +123,7 @@ func parseDirectoryItem(TOCItem models.TOCItem, layer int) []byte {
 }
 
 // parseFileToTOC 通过文件生成目录结构
-func parseFileToTOC(filepath string) (TOC models.TOCItem, err error) {
+func parseFileToTOC(filepath string) (TOC Item, err error) {
 	summaryDir, err := os.Stat(filepath)
 	if err != nil {
 		log.Error.Println("打开目录文件失败:", err)
@@ -137,9 +136,9 @@ func parseFileToTOC(filepath string) (TOC models.TOCItem, err error) {
 	return TOCItem, err
 }
 
-func walkDirToCreateTOCItem(filepath string) (models.TOCItem, error) {
+func walkDirToCreateTOCItem(filepath string) (Item, error) {
 	file, err := os.Stat(filepath)
-	var TOCItem models.TOCItem
+	var TOCItem Item
 
 	if err != nil {
 		log.Error.Println("打开目录文件失败:", err)
@@ -166,7 +165,7 @@ func walkDirToCreateTOCItem(filepath string) (models.TOCItem, error) {
 		} else if info.Name() == "index.md" {
 			TOCItem.MarkdownFile = convertLink(path)
 		} else if strings.ToLower(info.Name()[len(info.Name())-3:len(info.Name())]) == ".md" {
-			TOCItem.TOCItems = append(TOCItem.TOCItems, models.TOCItem{Title: fp.ToSlash(info.Name())[:len(info.Name())-3], MarkdownFile: convertLink(path)})
+			TOCItem.TOCItems = append(TOCItem.TOCItems, Item{Title: fp.ToSlash(info.Name())[:len(info.Name())-3], MarkdownFile: convertLink(path)})
 		}
 		return nil
 	})
