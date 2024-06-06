@@ -1,1 +1,31 @@
-<span><<</span>
+<label class="sidebar-switch" onclick="SwitchSidebar()">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path>
+    </svg>
+</label>
+
+<style>
+    #topbar .sidebar-switch svg {
+        height: calc(var(--topbar-height) * 0.6)
+    }
+</style>
+
+<script>
+    function GetCurrentWidth() {
+        const width = window.getComputedStyle(document.documentElement).getPropertyValue("--sidebar-width")
+        const match = width.match(/(\d+)/)
+        return match ? parseFloat(match[0]) : 0
+    }
+
+    let oldWidth = GetCurrentWidth()
+
+    function SwitchSidebar() {
+        const currentWidth = GetCurrentWidth()
+        if (currentWidth === 0)
+            SetSidebarWidth(oldWidth)
+        else {
+            SetSidebarWidth(0)
+        }
+        oldWidth = currentWidth
+    }
+</script>
