@@ -11,6 +11,7 @@
         }
         .page-center {
             margin-left: var(--sidebar-width);
+            margin-top: var(--topbar-height);
         }
     </style>
     <style>{{CSS "themes/vars.css"}}</style>
@@ -29,6 +30,7 @@
 <body>
 {{template "sidebar/sidebar.gohtml" Dict "Content" "toc/toc.gohtml" "Data" .Directory}}
 <div class="page-center">
+    {{ template "topbar/topbar.gohtml" }}
     {{ template "article/article.gohtml" }}
 </div>
 </body>

@@ -1,0 +1,41 @@
+<header id="topbar">
+    <nav>
+        <span>
+            {{template "topbar/sidebar-switch.gohtml"}}
+            {{template "topbar/colors.gohtml"}}
+        </span>
+        <span>
+            {{template "topbar/text-link.gohtml"}}
+            {{template "topbar/text-link.gohtml"}}
+            {{template "topbar/text-link.gohtml"}}
+        </span>
+    </nav>
+</header>
+
+<style>
+    :root {
+        --topbar-height: 3em;
+    }
+
+    #topbar {
+        background: var(--background);
+        height: var(--topbar-height);
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: var(--sidebar-width);
+        margin: 0;
+        padding: 0;
+        box-shadow: 12px 0 12px #00000022;
+        border-bottom: solid 0.1em var(--color-border-neutal);
+    }
+
+    #topbar nav {
+        height: 100%;
+        margin: 0 1em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+    }
+</style>
