@@ -24,7 +24,7 @@ func getSummaryFileToByte(filePath string) []byte {
 
 // writeContentToFile 写入字节数据到覆盖文件中
 func writeContentToFile(filePath string, content []byte) {
-	err := os.WriteFile(filePath, content, 0644)
+	err := os.WriteFile(filePath, content, os.ModePerm)
 	if err != nil {
 		log.Error.Println("写入文件", filePath, "失败")
 	}

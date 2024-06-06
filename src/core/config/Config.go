@@ -13,7 +13,8 @@ var (
 	ServerDebugDelay = 0.0
 	BuildOutput      = "build"
 
-	BaseDir = ""
+	// ProgramDir 指 rellwnote.exe 这个文件所在的目录
+	ProgramDir = ""
 )
 
 const (
@@ -21,13 +22,14 @@ const (
 	ExtensionDir             = "extensions"
 	BuiltinExtensionFileName = "builtin"
 	SummaryFileName          = "SUMMARY.md"
+	OutputDirFlag            = ".build_by_rellwnote"
 )
 
 func init() {
 	var err error
-	BaseDir, err = os.Executable()
+	ProgramDir, err = os.Executable()
 	if err != nil {
 		println(err.Error())
 	}
-	BaseDir = filepath.Dir(BaseDir)
+	ProgramDir = filepath.Dir(ProgramDir)
 }

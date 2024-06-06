@@ -48,7 +48,7 @@ func NewLibraryData() LibraryData {
 // Load 会读取一个目录中的全部模版文件，等同于重新加载模版
 func Load() *template.Template {
 	LastLoadedTemplate = template.New("main").Funcs(CustomFuncMap)
-	startPath := path.Join(config.BaseDir, config.TemplateDir)
+	startPath := path.Join(config.ProgramDir, config.TemplateDir)
 	startPath, _ = filepath.Abs(startPath)
 	_ = filepath.Walk(startPath, func(filePath string, info os.FileInfo, err error) error {
 		if err != nil {

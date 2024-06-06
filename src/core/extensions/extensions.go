@@ -26,7 +26,7 @@ type Extension struct {
 func LoadAll() (res []Extension) {
 	extDirs := append(
 		loadAllExtensionDir(path.Join(config.LibraryPath, config.ExtensionDir)),
-		loadAllExtensionDir(path.Join(config.BaseDir, config.ExtensionDir))...,
+		loadAllExtensionDir(path.Join(config.ProgramDir, config.ExtensionDir))...,
 	)
 	for _, dir := range extDirs {
 		e, err := Load(dir)

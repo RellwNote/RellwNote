@@ -63,7 +63,7 @@ func RandomString(length int) []string {
 }
 
 func JS(path string) interface{} {
-	res, err := os.ReadFile(filepath.Join(config.BaseDir, config.TemplateDir, path))
+	res, err := os.ReadFile(filepath.Join(config.ProgramDir, config.TemplateDir, path))
 	if err != nil {
 		return err.Error()
 	}
@@ -75,7 +75,7 @@ func JSCode(code string) interface{} {
 }
 
 func CSS(path string) interface{} {
-	res, err := os.ReadFile(filepath.Join(config.BaseDir, config.TemplateDir, path))
+	res, err := os.ReadFile(filepath.Join(config.ProgramDir, config.TemplateDir, path))
 	if err != nil {
 		return err.Error()
 	}
