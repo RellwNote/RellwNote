@@ -9,6 +9,11 @@
     <script>{{JS "js/common.js"}}</script>
     <style>{{CSS "themes/vars.css"}}</style>
     <style>{{CSS "themes/default.css"}}</style>
+    <style>{{CSS "themes/vars.css"}}</style>
+    <style>{{CSS "themes/default.css"}}</style>
+    {{ range .Themes }}
+        <style>{{CSSTheme .}}</style>
+    {{ end }}
     {{range .Extensions}} {{if .BuiltinCSS}}
         <style>{{CSSCode .BuiltinCSS}}</style>
     {{end}} {{end}}

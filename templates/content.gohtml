@@ -13,6 +13,11 @@
             margin-left: var(--sidebar-width);
         }
     </style>
+    <style>{{CSS "themes/vars.css"}}</style>
+    <style>{{CSS "themes/default.css"}}</style>
+    {{ range .Themes }}
+        <style data-theme-name="{{.}}">{{CSSTheme .}}</style>
+    {{ end }}
     <script>{{JS "js/common.js"}}</script>
     {{range .Extensions}} {{if .BuiltinCSS}}
         <style>{{CSSCode .BuiltinCSS}}</style>

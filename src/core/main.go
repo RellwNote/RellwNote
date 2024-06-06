@@ -65,6 +65,7 @@ func preGeneralAction() {
 func applyGeneralFlag(flag *flag.FlagSet) {
 	flag.StringVar(&config.LibraryPath, "library", config.LibraryPath, "library path")
 	flag.StringVar(&config.LibraryName, "library-name", config.LibraryName, "library name, show in tab title")
+	flag.StringVar(&config.Themes, "themes", config.Themes, "themes, use `,` to separate multiple theme name")
 }
 
 func printGeneralFlag() {

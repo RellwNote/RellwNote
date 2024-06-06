@@ -23,6 +23,7 @@ type LibraryData struct {
 	LibraryName     string
 	FaviconFileName string
 	Extensions      []extensions.Extension
+	Themes          []string
 }
 
 // NewLibraryData 会根据当前参数创建新的 LibraryData
@@ -43,6 +44,11 @@ func NewLibraryData() LibraryData {
 
 	for _, v := range extensions.LoadAll() {
 		res.Extensions = append(res.Extensions, v)
+	}
+
+	for _, v := range strings.Split(config.Themes, ",") {
+		v = strings.TrimSpace(v)
+		res.Themes = append(res.Themes, v)
 	}
 
 	return res
@@ -68,7 +74,7 @@ func Load() *template.Template {
 		key = key[len(startPath)+1:]
 		_, err = LastLoadedTemplate.Parse(fmt.Sprintf(`{{define "%s"}}%s{{end}}`, key, read))
 		if err != nil {
-			log.Error.Printf("模版 %s 中存在错误：%s\n", filePath, err.Error())
+			log.Error.Printf("template %s has error：%s\n", filePath, err.Error())
 		}
 		return nil
 	})

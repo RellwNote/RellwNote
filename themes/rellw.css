@@ -106,54 +106,7 @@ body.index h1 {
 
 /*图片*/
 .markdown img {
-    max-width: calc(100vw - var(--sidebar-resizer-width) - var(--sidebar-width) - 3em);
+    max-width: calc(100vw - var(--sidebar-width) - 3em);
     margin: auto;
     display: block;
-}
-
-/*表格*/
-.markdown table {
-    border-collapse: collapse;
-}
-
-.markdown table tbody tr:hover {
-    background: var(--background-quote);
-}
-
-.markdown table th,
-.markdown table td {
-    border-top: var(--color-border) solid .1em;
-    border-bottom: var(--color-border) solid .1em;
-}
-
-.markdown table th {
-    padding: 0.3em 1em;
-    font-size: 0.9em;
-    color: var(--text-color-neutal);
-}
-
-.markdown table td {
-    padding: 0.6em;
-}
-
-/* 定义滚动条的宽度和颜色 */
-::-webkit-scrollbar {
-    width: .6em;
-    height: .4em;
-}
-
-::-webkit-scrollbar-thumb:vertical {
-    background: #00000000;
-    border-right: solid 0.6em var(--primary-color);
-}
-::-webkit-scrollbar-thumb:horizontal {
-    background: #00000000;
-    border-bottom: solid 0.4em var(--primary-color);
-}
-
-::-webkit-scrollbar-track {
-    background: #00000000;
-}
-::-webkit-scrollbar-track:hover {
-    background: #00000022;
 }

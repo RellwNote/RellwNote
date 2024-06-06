@@ -74,7 +74,7 @@ html {
 
 /*图片*/
 .markdown img {
-    max-width: calc(100vw - var(--sidebar-resizer-width) - var(--sidebar-width) - 3em);
+    max-width: calc(100vw - var(--sidebar-width) - 3em);
     margin: auto;
     display: block;
 }
