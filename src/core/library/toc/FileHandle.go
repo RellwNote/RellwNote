@@ -7,27 +7,28 @@ import (
 )
 
 // getSummaryFileToByte 打开目录文件，获取其字节
-func getSummaryFileToByte(filePath string) []byte {
+func getSummaryFileToByte(filePath string) ([]byte, error) {
 	_, err := os.Stat(filePath)
 	if err != nil {
 		log.Error.Println("目录文件打开失败，错误：", err)
-		return nil
+		return nil, err
 	}
 	content, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Error.Println("读取目录文件失败,", err)
-		return nil
+		return nil, err
 	}
 	content = removeEmptyLinesFromFile(content)
-	return content
+	return content, nil
 }
 
 // writeContentToFile 写入字节数据到覆盖文件中
-func writeContentToFile(filePath string, content []byte) {
+func writeContentToFile(filePath string, content []byte) error {
 	err := os.WriteFile(filePath, content, os.ModePerm)
 	if err != nil {
 		log.Error.Println("写入文件", filePath, "失败")
 	}
+	return err
 }
 
 func removeEmptyLinesFromFile(content []byte) []byte {

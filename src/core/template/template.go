@@ -28,8 +28,12 @@ type LibraryData struct {
 
 // NewLibraryData 会根据当前参数创建新的 LibraryData
 func NewLibraryData() LibraryData {
+	TOCFormFile, err := toc.GetTOCFromFile(files.LibraryPath(config.SummaryFileName))
+	if err != nil {
+		log.Error.Println(err)
+	}
 	res := LibraryData{
-		Directory:   toc.GetTOCFromFile(files.LibraryPath(config.SummaryFileName)),
+		Directory:   TOCFormFile,
 		LibraryName: config.LibraryName,
 	}
 	if name, has := library.GetIconFileName(); has {

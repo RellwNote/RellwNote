@@ -17,17 +17,21 @@ import (
 
 var mdParser = goldmark.DefaultParser()
 
-func GetTOCFromFile(filepath string) (TOC models.TOCItem) {
-	content := getSummaryFileToByte(filepath)
+func GetTOCFromFile(filepath string) (TOC models.TOCItem, err error) {
+	content, err := getSummaryFileToByte(filepath)
 	TOC = parseSummaryByte(content)
 	return
 }
 
-func CreateSummaryFileByDirectory(fileDir string, summaryFileName string) {
+func CreateSummaryFileByDirectory(fileDir string, summaryFileName string) error {
 	fullFilePath := fp.Join(fileDir, summaryFileName)
-	TOCItem := parseFileToTOC(fileDir)
+	TOCItem, err := parseFileToTOC(fileDir)
+	if err != nil {
+		return err
+	}
 	content := parseDirectoryToByte(TOCItem)
-	writeContentToFile(fullFilePath, content)
+	err = writeContentToFile(fullFilePath, content)
+	return err
 }
 
 // parseSummaryByte 传入md数据，转成目录结构
@@ -120,7 +124,7 @@ func parseDirectoryItem(TOCItem models.TOCItem, layer int) []byte {
 }
 
 // parseFileToTOC 通过文件生成目录结构
-func parseFileToTOC(filepath string) (TOC models.TOCItem) {
+func parseFileToTOC(filepath string) (TOC models.TOCItem, err error) {
 	summaryDir, err := os.Stat(filepath)
 	if err != nil {
 		log.Error.Println("打开目录文件失败:", err)
@@ -129,16 +133,18 @@ func parseFileToTOC(filepath string) (TOC models.TOCItem) {
 		log.Error.Println("选中的路径：", filepath, "不是目录.", err)
 	}
 
-	TOCItem := walkDirToCreateTOCItem(filepath)
-	return TOCItem
+	TOCItem, err := walkDirToCreateTOCItem(filepath)
+	return TOCItem, err
 }
 
-func walkDirToCreateTOCItem(filepath string) models.TOCItem {
+func walkDirToCreateTOCItem(filepath string) (models.TOCItem, error) {
 	file, err := os.Stat(filepath)
+	var TOCItem models.TOCItem
+
 	if err != nil {
 		log.Error.Println("打开目录文件失败:", err)
+		return TOCItem, err
 	}
-	var TOCItem models.TOCItem
 	TOCItem.Title = file.Name()
 	err = fp.Walk(filepath, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
@@ -151,7 +157,11 @@ func walkDirToCreateTOCItem(filepath string) models.TOCItem {
 			return nil
 		}
 		if info.IsDir() {
-			TOCItem.TOCItems = append(TOCItem.TOCItems, walkDirToCreateTOCItem(path))
+			item, err := walkDirToCreateTOCItem(path)
+			if err != nil {
+				return err
+			}
+			TOCItem.TOCItems = append(TOCItem.TOCItems, item)
 			return fp.SkipDir
 		} else if info.Name() == "index.md" {
 			TOCItem.MarkdownFile = convertLink(path)
@@ -163,7 +173,7 @@ func walkDirToCreateTOCItem(filepath string) models.TOCItem {
 	if err != nil {
 		log.Error.Println("读取文件夹路径失败: ", filepath, err)
 	}
-	return TOCItem
+	return TOCItem, err
 }
 
 func convertLink(link string) string {
