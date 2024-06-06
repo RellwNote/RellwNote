@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"html/template"
 	"os"
-	"path"
 	"path/filepath"
 	"rellwnote/core/config"
 	"rellwnote/core/extensions"
+	"rellwnote/core/files"
 	"rellwnote/core/library"
 	"rellwnote/core/library/toc"
 	"rellwnote/core/log"
@@ -29,7 +29,7 @@ type LibraryData struct {
 // NewLibraryData 会根据当前参数创建新的 LibraryData
 func NewLibraryData() LibraryData {
 	res := LibraryData{
-		Directory:   toc.GetTOCFromFile(path.Join(config.LibraryPath, config.SummaryFileName)),
+		Directory:   toc.GetTOCFromFile(files.LibraryPath(config.SummaryFileName)),
 		LibraryName: config.LibraryName,
 	}
 	if name, has := library.GetIconFileName(); has {
@@ -48,7 +48,7 @@ func NewLibraryData() LibraryData {
 // Load 会读取一个目录中的全部模版文件，等同于重新加载模版
 func Load() *template.Template {
 	LastLoadedTemplate = template.New("main").Funcs(CustomFuncMap)
-	startPath := path.Join(config.ProgramDir, config.TemplateDir)
+	startPath := files.ProgramPath(config.TemplateDir)
 	startPath, _ = filepath.Abs(startPath)
 	_ = filepath.Walk(startPath, func(filePath string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -83,8 +83,8 @@ func BuildContentPage() ([]byte, error) {
 }
 
 func BuildIndexPage() ([]byte, error) {
-	if library.FileExists("index.html") {
-		res, err := library.ReadFile("index.html")
+	if files.IsFile(files.LibraryPath("index.html")) {
+		res, err := os.ReadFile(files.LibraryPath("index.html"))
 		if err != nil {
 			return nil, err
 		}

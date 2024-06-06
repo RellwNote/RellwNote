@@ -10,9 +10,9 @@ package extensions
 
 import (
 	"os"
-	"path"
 	"path/filepath"
 	"rellwnote/core/config"
+	"rellwnote/core/files"
 	"rellwnote/core/log"
 )
 
@@ -25,8 +25,8 @@ type Extension struct {
 // LoadAll 会读取全部可安装扩展的目录下的全部扩展，这些扩展可能来自本软件位置或文档库的 extensions 文件夹
 func LoadAll() (res []Extension) {
 	extDirs := append(
-		loadAllExtensionDir(path.Join(config.LibraryPath, config.ExtensionDir)),
-		loadAllExtensionDir(path.Join(config.ProgramDir, config.ExtensionDir))...,
+		loadAllExtensionDir(files.LibraryPath(config.ExtensionDir)),
+		loadAllExtensionDir(files.ProgramPath(config.ExtensionDir))...,
 	)
 	for _, dir := range extDirs {
 		e, err := Load(dir)
@@ -50,11 +50,11 @@ func Load(extPath string) (ext Extension, err error) {
 	extPath, _ = filepath.Abs(extPath)
 
 	ext.Name = filepath.Base(extPath)
-	js, jsErr := os.ReadFile(path.Join(extPath, config.BuiltinExtensionFileName+".js"))
+	js, jsErr := os.ReadFile(filepath.Join(extPath, config.BuiltinExtensionFileName+".js"))
 	if jsErr == nil {
 		ext.BuiltinJS = string(js)
 	}
-	css, cssErr := os.ReadFile(path.Join(extPath, config.BuiltinExtensionFileName+".css"))
+	css, cssErr := os.ReadFile(filepath.Join(extPath, config.BuiltinExtensionFileName+".css"))
 	if cssErr == nil {
 		ext.BuiltinCSS = string(css)
 	}
@@ -67,22 +67,18 @@ func loadAllExtensionDir(extPath string) (res []string) {
 	if err != nil {
 		return
 	}
-	open, err := os.Open(extPath)
+	dirs, err := os.ReadDir(extPath)
 	if err != nil {
 		return
 	}
-	readDir, err := open.ReadDir(-1)
-	if err != nil {
-		return
-	}
-	for _, i := range readDir {
-		if !i.IsDir() {
+	for _, d := range dirs {
+		if !d.IsDir() {
 			continue
 		}
-		if i.Name()[0] == '.' {
+		if d.Name()[0] == '.' {
 			continue
 		}
-		fullPath := path.Join(extPath, i.Name())
+		fullPath := filepath.Join(extPath, d.Name())
 		res = append(res, fullPath)
 	}
 	return

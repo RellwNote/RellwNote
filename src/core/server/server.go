@@ -6,8 +6,8 @@ import (
 	"math/rand/v2"
 	"net/http"
 	"os"
-	"path"
 	"rellwnote/core/config"
+	"rellwnote/core/files"
 	"rellwnote/core/library"
 	"rellwnote/core/log"
 	"rellwnote/core/template"
@@ -39,13 +39,14 @@ func indexPage() ([]byte, int) {
 
 func favicon() ([]byte, int) {
 	if name, has := library.GetIconFileName(); has {
-		icon, err := library.ReadFile(name)
+		icon, err := os.ReadFile(files.LibraryPath(name))
 		if err != nil {
 			return nil, 500
 		}
 		return icon, 200
 	}
-	file, err := os.ReadFile(path.Join(config.ProgramDir, config.TemplateDir, "favicon.svg"))
+
+	file, err := os.ReadFile(files.ProgramPath(config.TemplateDir, "favicon.svg"))
 	if err != nil {
 		return nil, 500
 	}
@@ -53,8 +54,8 @@ func favicon() ([]byte, int) {
 }
 
 func staticFile(url string) (res []byte, state int) {
-	if library.FileExists(url) {
-		file, err := library.ReadFile(url)
+	if files.IsFile(files.LibraryPath(url)) {
+		file, err := os.ReadFile(files.LibraryPath(url))
 		if err != nil {
 			return nil, 500
 		}

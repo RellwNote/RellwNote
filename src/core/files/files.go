@@ -2,7 +2,6 @@ package files
 
 import (
 	"os"
-	"path"
 	"path/filepath"
 	"rellwnote/core/config"
 )
@@ -27,14 +26,11 @@ func IsEmptyDir(path string) bool {
 	if !IsDir(path) {
 		return false
 	}
-	open, err := os.Open(path)
+	dirs, err := os.ReadDir(path)
 	if err != nil {
 		return false
 	}
-	defer open.Close()
-
-	_, err = open.Readdirnames(1)
-	return err != nil
+	return len(dirs) == 0
 }
 
 func Copy(sourcePath, targetPath string) error {
@@ -58,7 +54,7 @@ func CopyDirContentTo(sourceDir, targetDir string) error {
 		if absPath == walkPath {
 			return nil
 		}
-		targetPath := path.Join(targetDir, walkPath[len(absPath)+1:])
+		targetPath := filepath.Join(targetDir, walkPath[len(absPath)+1:])
 		if info.IsDir() {
 			return os.MkdirAll(targetPath, info.Mode())
 		}

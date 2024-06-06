@@ -1,22 +1,8 @@
 package library
 
 import (
-	"os"
-	"path"
-	"rellwnote/core/config"
+	"rellwnote/core/files"
 )
-
-func FileExists(filePath string) bool {
-	stat, err := os.Stat(path.Join(config.LibraryPath, filePath))
-	if err != nil {
-		return false
-	}
-	return stat.IsDir() == false
-}
-
-func ReadFile(filePath string) ([]byte, error) {
-	return os.ReadFile(path.Join(config.LibraryPath, filePath))
-}
 
 func GetIconFileName() (name string, has bool) {
 	iconNames := []string{
@@ -27,7 +13,7 @@ func GetIconFileName() (name string, has bool) {
 		"favicon.jpeg",
 	}
 	for _, name := range iconNames {
-		if FileExists(name) {
+		if files.IsFile(files.LibraryPath(name)) {
 			return name, true
 		}
 	}
