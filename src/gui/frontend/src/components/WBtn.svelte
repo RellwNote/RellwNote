@@ -1,5 +1,4 @@
 <script lang="ts">
-    import {onMount} from "svelte";
     export let color: string = "info";
     export let size: string = "medium";
 

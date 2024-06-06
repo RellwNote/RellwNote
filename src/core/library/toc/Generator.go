@@ -1,39 +1,23 @@
 package toc
 
 import (
-	"bytes"
-	"fmt"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/text"
-	"io/fs"
-	"os"
-	fp "path/filepath"
-	"rellwnote/core/config"
-	"rellwnote/core/log"
-	"strings"
 )
 
 var mdParser = goldmark.DefaultParser()
 
 func GetTOCFromFile(filepath string) (TOC Item, err error) {
 	content, err := getSummaryFileToByte(filepath)
+	content = removeEmptyLinesFromFile(content)
+	if err != nil {
+		return
+	}
 	TOC = parseSummaryByte(content)
 	return
 }
 
-func CreateSummaryFileByDirectory(fileDir string, summaryFileName string) error {
-	fullFilePath := fp.Join(fileDir, summaryFileName)
-	TOCItem, err := parseFileToTOC(fileDir)
-	if err != nil {
-		return err
-	}
-	content := parseDirectoryToByte(TOCItem)
-	err = writeContentToFile(fullFilePath, content)
-	return err
-}
-
-// parseSummaryByte 传入md数据，转成目录结构
 func parseSummaryByte(content []byte) (directory Item) {
 	reader := text.NewReader(content)
 	document := mdParser.Parse(reader)
@@ -90,91 +74,4 @@ func getLink(node ast.Node) (link string) {
 		}
 	}
 	return ""
-}
-
-// parseDirectoryToByte 将目录结构转化成[]byte
-func parseDirectoryToByte(TOC Item) []byte {
-	content := bytes.NewBuffer([]byte{})
-	directoryItems := TOC.TOCItems
-	for _, directoryItem := range directoryItems {
-		content.Write(parseDirectoryItem(directoryItem, 0))
-	}
-	return content.Bytes()
-}
-
-func parseDirectoryItem(TOCItem Item, layer int) []byte {
-	directoryItemByte := bytes.NewBuffer([]byte{})
-	for i := 0; i < layer; i++ {
-		directoryItemByte.WriteString("\t")
-	}
-	if len(TOCItem.MarkdownFile) == 0 {
-		directoryItemByte.WriteString(fmt.Sprintf("- %s\n", TOCItem.Title))
-	} else {
-		directoryItemByte.WriteString(fmt.Sprintf("- [%s](%s)\n", TOCItem.Title, TOCItem.MarkdownFile))
-	}
-	if len(TOCItem.TOCItems) == 0 {
-		return directoryItemByte.Bytes()
-	}
-	for _, v := range TOCItem.TOCItems {
-		childBytes := parseDirectoryItem(v, layer+1)
-		directoryItemByte.Write(childBytes)
-	}
-	return directoryItemByte.Bytes()
-}
-
-// parseFileToTOC 通过文件生成目录结构
-func parseFileToTOC(filepath string) (TOC Item, err error) {
-	summaryDir, err := os.Stat(filepath)
-	if err != nil {
-		log.Error.Println("打开目录文件失败:", err)
-	}
-	if !summaryDir.IsDir() {
-		log.Error.Println("选中的路径：", filepath, "不是目录.", err)
-	}
-
-	TOCItem, err := walkDirToCreateTOCItem(filepath)
-	return TOCItem, err
-}
-
-func walkDirToCreateTOCItem(filepath string) (Item, error) {
-	file, err := os.Stat(filepath)
-	var TOCItem Item
-
-	if err != nil {
-		log.Error.Println("打开目录文件失败:", err)
-		return TOCItem, err
-	}
-	TOCItem.Title = file.Name()
-	err = fp.Walk(filepath, func(path string, info fs.FileInfo, err error) error {
-		if err != nil {
-			log.Error.Println("打开文件路径:", path, "失败.", err)
-		}
-		if info.Name() == config.SummaryFileName {
-			return nil
-		}
-		if path == filepath {
-			return nil
-		}
-		if info.IsDir() {
-			item, err := walkDirToCreateTOCItem(path)
-			if err != nil {
-				return err
-			}
-			TOCItem.TOCItems = append(TOCItem.TOCItems, item)
-			return fp.SkipDir
-		} else if info.Name() == "index.md" {
-			TOCItem.MarkdownFile = convertLink(path)
-		} else if strings.ToLower(info.Name()[len(info.Name())-3:len(info.Name())]) == ".md" {
-			TOCItem.TOCItems = append(TOCItem.TOCItems, Item{Title: fp.ToSlash(info.Name())[:len(info.Name())-3], MarkdownFile: convertLink(path)})
-		}
-		return nil
-	})
-	if err != nil {
-		log.Error.Println("读取文件夹路径失败: ", filepath, err)
-	}
-	return TOCItem, err
-}
-
-func convertLink(link string) string {
-	return strings.ReplaceAll(fp.ToSlash(link), " ", "%20")
 }

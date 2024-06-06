@@ -10,15 +10,12 @@ import (
 func getSummaryFileToByte(filePath string) ([]byte, error) {
 	_, err := os.Stat(filePath)
 	if err != nil {
-		log.Error.Println("目录文件打开失败，错误：", err)
 		return nil, err
 	}
 	content, err := os.ReadFile(filePath)
 	if err != nil {
-		log.Error.Println("读取目录文件失败,", err)
 		return nil, err
 	}
-	content = removeEmptyLinesFromFile(content)
 	return content, nil
 }
 

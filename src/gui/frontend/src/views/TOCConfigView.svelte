@@ -1,6 +1,6 @@
 <script lang="ts">
     import WBtn from "../components/WBtn.svelte";
-    import TOCList from "../components/TOCList.svelte";
+    import TOCList from "../components/TOCListComponent.svelte";
 </script>
 
 <div class="TOCWindow">

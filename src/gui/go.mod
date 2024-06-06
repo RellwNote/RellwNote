@@ -4,7 +4,10 @@ go 1.21
 
 toolchain go1.22.3
 
-require github.com/wailsapp/wails/v2 v2.8.2
+require (
+	github.com/wailsapp/wails/v2 v2.8.2
+	github.com/yuin/goldmark v1.4.13
+)
 
 require (
 	github.com/bep/debounce v1.2.1 // indirect
