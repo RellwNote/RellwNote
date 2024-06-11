@@ -15,8 +15,13 @@
 
     function SwitchSidebar() {
         const currentWidth = GetCurrentWidth()
-        if (currentWidth === 0)
-            SetSidebarWidth(oldWidth)
+        if (currentWidth === 0) {
+            if (oldWidth === 0){
+                SetSidebarWidth(SidebarMinWidth)
+            }else{
+                SetSidebarWidth(oldWidth)
+            }
+        }
         else {
             SetSidebarWidth(0)
         }

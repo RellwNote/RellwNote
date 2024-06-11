@@ -2,7 +2,7 @@
 
 <div id="sidebar">
     <div class="sidebar-content">
-    {{DynamicTemplate .Content .Data}}
+        {{DynamicTemplate .Content .Data}}
     </div>
     <div class="resizer">
         <div></div>
@@ -11,9 +11,9 @@
 
 <script>
     // 最小侧边栏宽度
-    const minWidth = 160
+    const SidebarMinWidth = 160
     // 隐藏侧边栏宽度，当强行把侧边栏弄得小于这个宽度，会直接隐藏侧边栏
-    const hideWidth = 20
+    const SidebarHideWidth = 20
 
     let resizing = false
     let resizingStartX = 0
@@ -35,20 +35,25 @@
             return
 
         let size = e.clientX
-        if (size < hideWidth)
+        if (size < SidebarHideWidth)
             size = 0
-        else if (size < minWidth)
-            size = minWidth
+        else if (size < SidebarMinWidth)
+            size = SidebarMinWidth
 
         SetSidebarWidth(size)
     })
 
-    function SetSidebarWidth(width){
+    function SetSidebarWidth(width) {
         document.documentElement.style.setProperty("--sidebar-width", width + "px")
+        localStorage.setItem("sidebar-width", width)
         if (width > 0)
             document.getElementById("sidebar").classList.remove('hide')
         else
             document.getElementById("sidebar").classList.add('hide')
+    }
+    const width = localStorage.getItem("sidebar-width")
+    if (width) {
+        SetSidebarWidth(width)
     }
 </script>
 
