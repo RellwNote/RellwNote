@@ -1,1 +1,89 @@
-<span>colors</span>
+<label class="color-list-button" onclick="window.colorSelector.show()">
+    <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+        <path d="M352.5 860c-69.4 0-134.2-30.1-182.3-84.6-46.7-53-72.5-124-72.5-199.9 0-228.7 186.1-414.8 414.8-414.8 55.9 0 110.2 11 161.4 32.7 49.4 20.9 93.7 50.8 131.8 88.9 38.1 38.1 68 82.5 88.9 131.8 21.7 51.2 32.7 105.5 32.7 161.4 0 19.3 0 51.5-9.6 81.6-14.6 45.6-48.1 71.8-91.9 71.8-25.3 0-48.7-8.7-73.4-18-25.4-9.5-51.7-19.4-78.7-19.4-40 0-78.9 24.1-119 73.7l-1.5 1.8-1.7 1.8c-0.4 0.5-0.9 0.9-1.3 1.4C491.4 829 423.1 860 352.5 860z m160-619.3c-184.6 0-334.8 150.2-334.8 334.8 0 56.4 18.6 108.6 52.5 147 32.8 37.1 76.2 57.6 122.4 57.6 48.6 0 97.2-22.7 140.4-65.7l0.2-0.3c27.1-33.4 54.4-58 83.3-75.1 30.9-18.2 63.6-27.5 97.2-27.5 41.6 0 77.7 13.6 106.8 24.4 18.5 6.9 34.6 12.9 45.4 12.9 5.4 0 10.6 0 15.7-16.1 5.8-18.2 5.8-42.7 5.8-57.3 0-89.3-34.9-173.3-98.2-236.6-63.4-63.2-147.4-98.1-236.7-98.1z"></path>
+        <path d="M669.3 493.9c0 25.2 20.4 45.7 45.7 45.7s45.7-20.4 45.7-45.7c0-25.2-20.4-45.7-45.7-45.7s-45.7 20.5-45.7 45.7M424.2 349.3c0 25.2 20.4 45.7 45.7 45.7 25.2 0 45.7-20.4 45.7-45.7 0-25.2-20.4-45.7-45.7-45.7-25.3 0-45.7 20.5-45.7 45.7m153.8 19c0 25.2 20.4 45.7 45.7 45.7 25.2 0 45.7-20.4 45.7-45.7s-20.4-45.7-45.7-45.7c-25.2 0.1-45.7 20.5-45.7 45.7m-272 79.9c0 25.2 20.4 45.7 45.7 45.7 25.2 0 45.7-20.4 45.7-45.7s-20.4-45.7-45.7-45.7c-25.2 0.1-45.7 20.5-45.7 45.7m-32.1 176c0 37.8 30.7 68.5 68.5 68.5s68.5-30.7 68.5-68.5-30.7-68.5-68.5-68.5-68.5 30.7-68.5 68.5"></path>
+    </svg>
+</label>
+
+<div class="color-list" onclick="window.colorSelector.hide()">
+    <ul>
+        <!--把这里替换成不同的主题即可-->
+        <li onclick="window.colorSelector.select('Light')">Light</li>
+        <li onclick="window.colorSelector.select('Dark')">Dark</li>
+        <li onclick="window.colorSelector.select('Monokai')">Monokai</li>
+        <li onclick="window.colorSelector.select('Rellw')">Rellw</li>
+    </ul>
+</div>
+
+<script>
+    window.colorSelector = {
+        /**
+         * @returns {HTMLElement}
+         */
+        getTagPanel() {
+            return document.querySelector("#topbar .color-list")
+        },
+        /**
+         * @returns {HTMLElement}
+         */
+        getUl() {
+            return document.querySelector("#topbar .color-list ul")
+        },
+        /**
+         * @returns {HTMLElement}
+         */
+        getButton() {
+            return document.querySelector("#topbar .color-list-button")
+        },
+        show() {
+            this.getTagPanel().classList.add("show")
+            const rect = this.getButton().getBoundingClientRect()
+            this.getUl().style.marginLeft = rect.left + 'px'
+            this.getUl().style.marginTop = rect.bottom + 'px'
+        },
+        hide() {
+            this.getTagPanel().classList.remove("show")
+        },
+        select(name) {
+            // 这里编写替换主题颜色的代码
+            console.log(name)
+        }
+    }
+</script>
+
+<style>
+    #topbar .color-list {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0;
+        margin: 0;
+    }
+
+    #topbar .color-list.show {
+        display: block;
+    }
+
+    #topbar .color-list ul {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        border-radius: var(--radius-small);
+        border: solid 0.1em var(--color-border);
+        background: var(--background);
+    }
+
+    #topbar .color-list li {
+        list-style: none;
+        padding: .4em 1em;
+        cursor: pointer;
+    }
+
+    #topbar .color-list li:hover {
+        background: var(--background-quote);
+    }
+</style>
+

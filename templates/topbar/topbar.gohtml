@@ -1,11 +1,11 @@
 <header id="topbar">
     <nav>
         {{template "topbar/sidebar-switch.gohtml"}}
-{{/*        {{template "topbar/colors.gohtml"}}*/}}
+        {{template "topbar/colors.gohtml"}}
         <div style="flex: 1"></div>
-{{/*        {{template "topbar/text-link.gohtml"}}*/}}
-{{/*        {{template "topbar/text-link.gohtml"}}*/}}
-{{/*        {{template "topbar/text-link.gohtml"}}*/}}
+        {{/*        {{template "topbar/text-link.gohtml"}}*/}}
+        {{/*        {{template "topbar/text-link.gohtml"}}*/}}
+        {{/*        {{template "topbar/text-link.gohtml"}}*/}}
     </nav>
 </header>
 
@@ -29,10 +29,26 @@
 
     #topbar nav {
         height: 100%;
-        margin: 0 1em;
+        margin: 0 .3em;
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-direction: row;
+    }
+
+    #topbar nav label {
+        transition: transform 0.1s;
+        cursor: pointer;
+        margin: 0 .5em;
+    }
+
+    #topbar nav label:hover {
+        border-bottom: 0.1em solid var(--primary-color);
+        transform: translateY(-0.1em);
+    }
+
+    #topbar nav label svg {
+        height: calc(var(--topbar-height) * 0.5);
+        fill: var(--text-color);
     }
 </style>
