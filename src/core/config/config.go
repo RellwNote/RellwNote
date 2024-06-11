@@ -12,7 +12,7 @@ var (
 	ServerHost       = "localhost"
 	ServerDebugDelay = 0.0
 	BuildOutput      = "build"
-	Themes           = "rellw"
+	Theme            = "rellw"
 
 	// ProgramDir 指 rellwnote.exe 这个文件所在的目录
 	ProgramDir = ""

@@ -7,21 +7,17 @@
 
 <div class="color-list" onclick="window.colorSelector.hide()">
     <ul>
-        {{range Themes}}
-            {{range .ColorSets}}
-                <li onclick="window.colorSelector.select('{{.}}')">{{.}}</li>
-            {{end}}
+        {{range Theme.ColorSets}}
+            <li onclick="window.colorSelector.select('{{.}}')">{{.}}</li>
         {{end}}
     </ul>
 </div>
 
 <script>
     window.colorSelector = {
-        colors : [
-            {{range Themes}}
-            {{range .ColorSets}}
-                "{{.}}",
-            {{end}}
+        colors: [
+            {{range Theme.ColorSets}}
+            "{{.}}",
             {{end}}
         ],
         /**
@@ -53,15 +49,21 @@
         },
         select(name) {
             // 这里编写替换主题颜色的代码
-            for (let name of document.documentElement.classList){
+            for (let name of document.documentElement.classList) {
                 if (name.startsWith("color-set-")) {
                     document.documentElement.classList.remove(name)
                 }
             }
             document.documentElement.classList.add("color-set-" + name.toLowerCase())
+            localStorage.setItem("color-set", name)
         }
     }
-    window.colorSelector.select(window.colorSelector.colors[0])
+    const colorSet = localStorage.getItem("color-set")
+    if (colorSet && window.colorSelector.colors.indexOf(colorSet) >= 0) {
+        window.colorSelector.select(colorSet)
+    } else {
+        window.colorSelector.select(window.colorSelector.colors[0])
+    }
 </script>
 
 <style>

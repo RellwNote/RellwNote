@@ -14,20 +14,6 @@ type Theme struct {
 	ColorSets []string
 }
 
-func LoadAll() []Theme {
-	var res []Theme
-	for _, v := range strings.Split(config.Themes, ",") {
-		v = strings.TrimSpace(v)
-		t, err := Load(v)
-		if err != nil {
-			continue
-		}
-		res = append(res, t)
-	}
-
-	return res
-}
-
 func Load(name string) (t Theme, err error) {
 	paths := []string{
 		files.LibraryPath(config.ThemeDir, name+".css"),
