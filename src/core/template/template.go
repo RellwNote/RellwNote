@@ -23,7 +23,6 @@ type LibraryData struct {
 	LibraryName     string
 	FaviconFileName string
 	Extensions      []extensions.Extension
-	Themes          []string
 }
 
 // NewLibraryData 会根据当前参数创建新的 LibraryData
@@ -44,11 +43,6 @@ func NewLibraryData() LibraryData {
 
 	for _, v := range extensions.LoadAll() {
 		res.Extensions = append(res.Extensions, v)
-	}
-
-	for _, v := range strings.Split(config.Themes, ",") {
-		v = strings.TrimSpace(v)
-		res.Themes = append(res.Themes, v)
 	}
 
 	return res

@@ -1,9 +1,79 @@
+/*ColorSets Light,Dark,Rellw*/
+:root.color-set-dark {
+    --text-color: #eee;
+    --text-color-accent: #fff;
+    --text-color-neutal: #ddd;
+
+    --background: #333;
+    --background-code: #555;
+    --background-code-block: #555;
+    --background-quote: #444;
+
+    --primary-color: #e05353;
+    --primary-color-vivid: #f32525;
+    --primary-color-light: #9b3c3c;
+
+    --secondary-color: #e549c4;
+    --secondary-color-vivid: #ee00b6;
+
+    --accent-color: #f6d226;
+
+    --color-border: #aaa;
+    --color-border-neutal: #ddd;
+}
+
+:root.color-set-rellw {
+    --text-color: #042044;
+    --text-color-accent: #0b356b;
+    --text-color-neutal: #051731;
+
+    --background: #ece7ba;
+    --background-code: #d2cc96;
+    --background-code-block: #d2cc96;
+    --background-quote: #d5d3aa;
+
+    --primary-color: #289b8a;
+    --primary-color-vivid: #136aa1;
+    --primary-color-light: #94c9d9;
+
+    --secondary-color: #e57849;
+    --secondary-color-vivid: #ee7f00;
+
+    --accent-color: #f6d226;
+
+    --color-border: #aaa;
+    --color-border-neutal: #ddd;
+}
+
+:root.color-set-light {
+    --text-color: #222;
+    --text-color-accent: #000;
+    --text-color-neutal: #444;
+
+    --background: #fff;
+    --background-code: #eee;
+    --background-code-block: #eee;
+    --background-quote: #eee;
+
+    --primary-color: #e05353;
+    --primary-color-vivid: #f32525;
+    --primary-color-light: #ffd8d8;
+
+    --secondary-color: #e549c4;
+    --secondary-color-vivid: #ee00b6;
+
+    --accent-color: #f6d226;
+
+    --color-border: #aaa;
+    --color-border-neutal: #ddd;
+}
 
 
 html {
     background: var(--background);
 }
 
+/*主页样式*/
 body.index {
     background: var(--background);
     padding: 2em;
@@ -11,7 +81,8 @@ body.index {
     overflow: hidden;
     height: 100vh;
 }
-body.index article{
+
+body.index article {
     width: 70%;
     max-width: 50em;
     min-width: 20em;
@@ -36,7 +107,7 @@ body.index h1 {
 .markdown h3,
 .markdown h4,
 .markdown h5,
-.markdown h6{
+.markdown h6 {
     color: var(--text-color-accent);
 }
 

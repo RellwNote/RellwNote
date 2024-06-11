@@ -7,16 +7,23 @@
 
 <div class="color-list" onclick="window.colorSelector.hide()">
     <ul>
-        <!--把这里替换成不同的主题即可-->
-        <li onclick="window.colorSelector.select('Light')">Light</li>
-        <li onclick="window.colorSelector.select('Dark')">Dark</li>
-        <li onclick="window.colorSelector.select('Monokai')">Monokai</li>
-        <li onclick="window.colorSelector.select('Rellw')">Rellw</li>
+        {{range Themes}}
+            {{range .ColorSets}}
+                <li onclick="window.colorSelector.select('{{.}}')">{{.}}</li>
+            {{end}}
+        {{end}}
     </ul>
 </div>
 
 <script>
     window.colorSelector = {
+        colors : [
+            {{range Themes}}
+            {{range .ColorSets}}
+                "{{.}}",
+            {{end}}
+            {{end}}
+        ],
         /**
          * @returns {HTMLElement}
          */
@@ -46,9 +53,15 @@
         },
         select(name) {
             // 这里编写替换主题颜色的代码
-            console.log(name)
+            for (let name of document.documentElement.classList){
+                if (name.startsWith("color-set-")) {
+                    document.documentElement.classList.remove(name)
+                }
+            }
+            document.documentElement.classList.add("color-set-" + name.toLowerCase())
         }
     }
+    window.colorSelector.select(window.colorSelector.colors[0])
 </script>
 
 <style>
@@ -61,6 +74,7 @@
         bottom: 0;
         padding: 0;
         margin: 0;
+        color: var(--text-color);
     }
 
     #topbar .color-list.show {

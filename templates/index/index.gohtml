@@ -11,8 +11,8 @@
     <style>{{CSS "themes/default.css"}}</style>
     <style>{{CSS "themes/vars.css"}}</style>
     <style>{{CSS "themes/default.css"}}</style>
-    {{ range .Themes }}
-        <style>{{CSSTheme .}}</style>
+    {{ range Themes }}
+        <style>{{CSSCode .Code}}</style>
     {{ end }}
     {{range .Extensions}} {{if .BuiltinCSS}}
         <style>{{CSSCode .BuiltinCSS}}</style>

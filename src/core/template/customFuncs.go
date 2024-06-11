@@ -8,7 +8,6 @@ import (
 	"os"
 	"rellwnote/core/config"
 	"rellwnote/core/files"
-	"rellwnote/core/log"
 	"rellwnote/core/theme"
 	"strings"
 	"time"
@@ -22,7 +21,7 @@ var CustomFuncMap = template.FuncMap{
 	"JSCode":          JSCode,
 	"CSS":             CSS,
 	"CSSCode":         CSSCode,
-	"CSSTheme":        CSSTheme,
+	"Themes":          theme.LoadAll,
 	"URL":             URL,
 	"DynamicTemplate": DynamicTemplate,
 	"Add": func(a, b int) int {
@@ -87,15 +86,6 @@ func CSS(path string) interface{} {
 
 func CSSCode(code string) interface{} {
 	return template.CSS(code)
-}
-
-func CSSTheme(themeName string) template.CSS {
-	load, err := theme.Load(themeName)
-	if err != nil {
-		log.Warning.Printf("load theme %s failed: %v\n", themeName, err)
-		return ""
-	}
-	return template.CSS(load)
 }
 
 func URL(url string) interface{} {
